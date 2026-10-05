@@ -954,98 +954,86 @@ const MAX_LANTERNS_ALIVE = isMobile ? 4 : 8;
 const FIREFLY_COUNT = isMobile ? 6 : 12;
 
 /* ============================================================
-   AUDIO — bell chime (Web Audio API, no files)
+   AUDIO — bell chime (fixed for GitHub Pages / iOS / Android)
    ============================================================ */
 let audioCtx = null;
-function initAudio(){
-  if (audioCtx) return;
+let audioUnlocked = false;
+
+function createAudioCtx(){
+  if (audioCtx) return audioCtx;
   try {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  } catch(e){ audioCtx = null; }
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    audioCtx = new Ctx({ latencyHint: 'interactive' });
+  } catch(e){
+    audioCtx = null;
+  }
+  return audioCtx;
 }
+
+/* iOS-friendly unlock — silent buffer inside a user gesture */
+function unlockAudio(){
+  const ctxA = createAudioCtx();
+  if (!ctxA) return;
+  if (ctxA.state === 'suspended'){
+    ctxA.resume().catch(()=>{});
+  }
+  try {
+    const buffer = ctxA.createBuffer(1, 1, 22050);
+    const source = ctxA.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctxA.destination);
+    source.start(0);
+  } catch(e){}
+  audioUnlocked = true;
+}
+
+/* Attach unlock to EVERY interaction, not once */
+['click','touchstart','touchend','pointerdown','keydown'].forEach(ev => {
+  window.addEventListener(ev, unlockAudio, { passive: true });
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) unlockAudio();
+});
+
 function playBell(freq){
-  if (!audioCtx) return;
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  const t = audioCtx.currentTime;
+  const ctxA = createAudioCtx();
+  if (!ctxA) return;
+
+  // if suspended, resume first, then play
+  if (ctxA.state === 'suspended'){
+    ctxA.resume().then(() => playBell(freq)).catch(()=>{});
+    return;
+  }
+
+  const t = ctxA.currentTime + 0.01;
   const baseFreq = freq || 880;
 
-  // Fundamental
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = baseFreq;
-  gain.gain.setValueAtTime(0, t);
-  gain.gain.linearRampToValueAtTime(0.12, t + 0.008);
-  gain.gain.exponentialRampToValueAtTime(0.0008, t + 1.4);
-  osc.connect(gain).connect(audioCtx.destination);
-  osc.start(t);
-  osc.stop(t + 1.5);
+  try {
+    const osc = ctxA.createOscillator();
+    const gain = ctxA.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = baseFreq;
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.14, t + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0008, t + 1.4);
+    osc.connect(gain).connect(ctxA.destination);
+    osc.start(t);
+    osc.stop(t + 1.5);
 
-  // Harmonic — soft overtone
-  const osc2 = audioCtx.createOscillator();
-  const gain2 = audioCtx.createGain();
-  osc2.type = 'sine';
-  osc2.frequency.value = baseFreq * 2.01;
-  gain2.gain.setValueAtTime(0, t);
-  gain2.gain.linearRampToValueAtTime(0.04, t + 0.008);
-  gain2.gain.exponentialRampToValueAtTime(0.0004, t + 0.9);
-  osc2.connect(gain2).connect(audioCtx.destination);
-  osc2.start(t);
-  osc2.stop(t + 1.0);
+    const osc2 = ctxA.createOscillator();
+    const gain2 = ctxA.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.value = baseFreq * 2.01;
+    gain2.gain.setValueAtTime(0, t);
+    gain2.gain.linearRampToValueAtTime(0.05, t + 0.008);
+    gain2.gain.exponentialRampToValueAtTime(0.0004, t + 0.9);
+    osc2.connect(gain2).connect(ctxA.destination);
+    osc2.start(t);
+    osc2.stop(t + 1.0);
+  } catch(e){}
 }
-
-/* init on first user interaction */
-['click','touchstart','keydown'].forEach(ev => {
-  window.addEventListener(ev, initAudio, { once: true, passive: true });
-});
-
-/* ============================================================
-   BUILD DOM
-   ============================================================ */
-const poemSky = document.getElementById('poemSky');
-const groundEl = document.getElementById('ground');
-const dotsEl   = document.getElementById('dots');
-const hintEl   = document.getElementById('hint');
-const final    = document.getElementById('final');
-const flash    = document.getElementById('flash');
-const wishCounter = document.getElementById('wishCounter');
-const wishNum = document.getElementById('wishNum');
-
-const groundEls = [];
-const dotEls    = [];
-const poemLines = [];
-
-LANTERNS.forEach((cfg, i) => {
-  const line = document.createElement('div');
-  line.className = 'poem-line';
-  line.innerHTML = cfg.line;
-  poemSky.appendChild(line);
-  poemLines.push(line);
-
-  const slot = document.createElement('button');
-  slot.type = 'button';
-  slot.className = 'lantern-slot';
-  slot.setAttribute('aria-label', 'Release lantern ' + (i + 1));
-  slot.innerHTML = `
-    <div class="lantern-body"></div>
-    <div class="lantern-base"></div>
-    <div class="lantern-hook"></div>
-  `;
-  slot.addEventListener('click', () => releaseLantern(i), { passive: true });
-  groundEl.appendChild(slot);
-  groundEls.push(slot);
-
-  const d = document.createElement('div');
-  d.className = 'dot';
-  dotsEl.appendChild(d);
-  dotEls.push(d);
-});
-
-/* special lantern's sky line — hidden initially */
-const specialLine = document.createElement('div');
-specialLine.className = 'poem-line';
-specialLine.innerHTML = SPECIAL_LINE;
-poemSky.appendChild(specialLine);
 
 /* ============================================================
    CANVAS — stars + shooters + sparks + fireflies + wish stars
