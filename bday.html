@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#05060b">
+<title>অসমাপ্ত উপাখ্যান — শুভ জন্মদিন</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@300;400;500;600&family=Galada&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Tiro Bangla', serif;
+  background:#05060b;
+  color:#e8dcc2;
+  user-select:none;
+  position:relative;
+  overscroll-behavior:none;
+}
+
+/* ================================
+   SCENE
+   ================================ */
+.scene{
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 115%, #3a1f18 0%, transparent 62%),
+    radial-gradient(ellipse 70% 50% at 50% 108%, #582a18 0%, transparent 55%),
+    radial-gradient(ellipse 60% 45% at 22% 18%, #1a1a3e 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 80% 25%, #221636 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 45%, #0e0f24 0%, #07080f 55%, #000 100%);
+  overflow:hidden;
+  transform:translateZ(0);
+  will-change:transform;
+}
+
+#stars{position:absolute;inset:0;pointer-events:none;z-index:1;display:block}
+
+/* grain — pure CSS dot pattern, no SVG noise */
+.grain{
+  position:fixed;inset:0;
+  pointer-events:none;z-index:2;
+  opacity:.08;
+  background-image:
+    radial-gradient(circle at 20% 30%, #fff 0.5px, transparent 1px),
+    radial-gradient(circle at 70% 60%, #fff 0.5px, transparent 1px),
+    radial-gradient(circle at 40% 80%, #fff 0.4px, transparent 1px);
+  background-size:120px 120px, 180px 180px, 90px 90px;
+}
+
+/* ---------- MOON ---------- */
+.moon{
+  position:absolute;
+  top:9%;right:12%;
+  width:66px;height:66px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 38% 34%, #fff8e0 0%, #f4e6bf 42%, #d8c393 75%, #a88c5c 100%);
+  box-shadow:
+    0 0 30px 6px rgba(255,232,190,.35),
+    0 0 70px 20px rgba(255,215,160,.16);
+  pointer-events:none;z-index:1;
+  transform:translateZ(0);
+}
+.moon::before{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(ellipse 15% 12% at 62% 55%, rgba(140,110,70,.35), transparent 70%),
+    radial-gradient(ellipse 10% 9% at 42% 68%, rgba(140,110,70,.3), transparent 70%),
+    radial-gradient(ellipse 8% 7% at 55% 32%, rgba(140,110,70,.28), transparent 70%);
+}
+/* animated glow as a pseudo element — opacity only, cheap */
+.moon::after{
+  content:'';position:absolute;inset:-40%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,232,190,.22),transparent 60%);
+  animation:moonFade 8s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes moonFade{
+  0%,100%{opacity:.55}
+  50%    {opacity:1}
+}
+
+.hills{position:absolute;left:0;right:0;bottom:0;width:100%;pointer-events:none}
+.hills.back{z-index:1;opacity:.7;height:52%}
+.hills.front{z-index:2;opacity:1;height:42%}
+
+.horizon{
+  position:absolute;left:0;right:0;bottom:0;
+  height:38%;
+  background:linear-gradient(to top,
+    rgba(255,150,60,.14),
+    rgba(255,140,60,.05) 40%,
+    transparent);
+  pointer-events:none;z-index:3;
+}
+
+/* ================================
+   HEADER
+   ================================ */
+.hud-top{
+  position:fixed;top:0;left:0;right:0;
+  z-index:30;
+  padding:20px 22px 0;
+  text-align:center;
+  pointer-events:none;
+}
+.hud-top .label{
+  font-family:'Hind Siliguri', sans-serif;
+  font-size:9px;letter-spacing:5px;
+  text-transform:uppercase;
+  color:#8b7550;font-weight:500;
+  margin-bottom:6px;
+  opacity:0;
+  animation:fadeDown 1.2s ease .1s forwards;
+}
+.hud-top h1{
+  font-family:'Tiro Bangla', serif;
+  font-size:clamp(1rem,3.6vw,1.2rem);
+  font-weight:400;letter-spacing:3px;
+  color:#e8d8b0;
+  opacity:0;
+  animation:fadeDown 1.2s ease .25s forwards;
+}
+@keyframes fadeDown{
+  from{opacity:0;transform:translateY(-10px)}
+  to  {opacity:1;transform:translateY(0)}
+}
+
+/* ================================
+   READ BUTTON
+   ================================ */
+.read-btn{
+  position:fixed;
+  top:22px;left:22px;
+  z-index:35;
+  display:flex;align-items:center;gap:7px;
+  padding:9px 15px 9px 13px;
+  border-radius:30px;
+  background:rgba(20,15,8,.7);
+  border:1px solid rgba(255,210,140,.28);
+  color:#d8c393;
+  font-family:'Hind Siliguri', sans-serif;
+  font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;font-weight:500;
+  cursor:pointer;
+  transition:background .25s, border-color .25s, color .25s, transform .15s;
+  opacity:0;
+  animation:fadeDown 1.2s ease .5s forwards;
+}
+.read-btn:hover{
+  background:rgba(30,22,12,.9);
+  border-color:rgba(255,210,140,.65);
+  color:#fff2c4;
+}
+.read-btn:active{transform:scale(.94)}
+.read-btn svg{width:13px;height:13px;flex-shrink:0}
+@media (max-width:380px){
+  .read-btn span{display:none}
+  .read-btn{padding:9px;border-radius:50%}
+}
+
+/* ================================
+   POEM SKY
+   ================================ */
+.poem-sky{
+  position:fixed;
+  top:11%;left:0;right:0;
+  z-index:5;
+  padding:0 24px;
+  max-width:620px;
+  margin:0 auto;
+  display:flex;flex-direction:column;
+  gap:11px;
+  pointer-events:none;
+  max-height:44vh;
+  overflow:hidden;
+}
+.poem-line{
+  font-family:'Tiro Bangla', serif;
+  font-size:clamp(.82rem,3.1vw,.98rem);
+  line-height:1.85;
+  color:transparent;
+  text-align:center;
+  letter-spacing:.2px;
+  transition:color 1.4s ease, opacity 1.4s ease, transform 1.4s ease;
+  opacity:0;
+  transform:translateY(20px);
+}
+.poem-line.on{
+  color:#e8d8b0;opacity:1;transform:translateY(0);
+  text-shadow:0 0 16px rgba(255,210,140,.5);
+}
+.poem-line .soft{color:#a89070;font-style:italic;font-size:.92em}
+
+/* ================================
+   GROUND LANTERNS
+   ================================ */
+.ground{
+  position:fixed;
+  left:0;right:0;bottom:9.5%;
+  z-index:15;
+  display:flex;justify-content:center;align-items:flex-end;
+  gap:clamp(8px,2vw,16px);
+  padding:0 16px;
+  pointer-events:none;
+  flex-wrap:wrap;
+}
+.lantern-slot{
+  pointer-events:auto;cursor:pointer;
+  position:relative;background:transparent;
+  border:none;padding:0;
+  width:clamp(34px,7.5vw,46px);
+  aspect-ratio:5 / 6.4;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), opacity .6s;
+  animation:bob 4.5s ease-in-out infinite;
+  will-change:transform;
+}
+.lantern-slot:nth-child(1){animation-delay:0s}
+.lantern-slot:nth-child(2){animation-delay:-.7s}
+.lantern-slot:nth-child(3){animation-delay:-1.4s}
+.lantern-slot:nth-child(4){animation-delay:-2.1s}
+.lantern-slot:nth-child(5){animation-delay:-2.8s}
+.lantern-slot:nth-child(6){animation-delay:-3.5s}
+@keyframes bob{
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%    {transform:translateY(-5px) rotate(1deg)}
+}
+.lantern-slot:hover{
+  transform:translateY(-9px) scale(1.08);
+  animation-play-state:paused;
+}
+.lantern-slot:active{transform:scale(.92)}
+.lantern-slot.released{
+  opacity:0;pointer-events:none;
+  transform:scale(.3) translateY(-30px);
+  animation:none;
+}
+
+/* lantern body — 2 shadow layers instead of 4 */
+.lantern-body{
+  position:absolute;inset:0;
+  border-radius:50% 50% 42% 42% / 60% 60% 40% 40%;
+  background:
+    radial-gradient(ellipse 58% 48% at 50% 72%,
+      #fff2c4 0%, #ffd76a 16%, #ffb038 32%,
+      #ef7820 55%, #c04412 78%, #6b1f08 100%);
+  box-shadow:
+    0 0 18px 5px rgba(255,180,80,.65),
+    inset 0 -4px 10px rgba(100,20,0,.45);
+  overflow:hidden;
+}
+.lantern-body::before{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,
+      transparent 0%, rgba(140,40,10,.25) 8%, transparent 16%,
+      transparent 34%, rgba(140,40,10,.2) 42%, transparent 50%,
+      transparent 58%, rgba(140,40,10,.2) 66%, transparent 74%,
+      transparent 88%, rgba(140,40,10,.25) 96%, transparent 100%);
+  opacity:.5;
+  border-radius:inherit;
+}
+.lantern-body::after{
+  content:'';position:absolute;
+  left:50%;bottom:14%;
+  width:22%;height:22%;
+  margin-left:-11%;border-radius:50%;
+  background:radial-gradient(circle,#fffbe0 0%,#ffd76e 40%,#ff9c30 80%,transparent 100%);
+  animation:flame 1.6s ease-in-out infinite;
+}
+@keyframes flame{
+  0%,100%{transform:scale(1);opacity:.9}
+  50%    {transform:scale(1.18);opacity:1}
+}
+.lantern-base{
+  position:absolute;bottom:-3%;left:50%;
+  transform:translateX(-50%);
+  width:34%;height:7%;border-radius:50%;
+  background:radial-gradient(ellipse,#fffce0 0%,#ffc850 45%,#a82800 100%);
+  box-shadow:0 0 12px 3px rgba(255,180,80,.8);
+}
+.lantern-hook{
+  position:absolute;top:-5%;left:50%;
+  width:14%;height:9%;margin-left:-7%;
+  border-radius:50% 50% 0 0;
+  border:1.2px solid rgba(255,220,150,.5);
+  border-bottom:none;opacity:.7;
+}
+
+.flying-lantern{
+  position:fixed;pointer-events:none;z-index:18;
+  width:clamp(34px,7.5vw,46px);
+  aspect-ratio:5 / 6.4;
+  will-change:transform, opacity;
+  transform:translate3d(0,0,0);
+}
+
+/* ================================
+   DOTS + HINT
+   ================================ */
+.dots{
+  position:fixed;bottom:4.2%;left:50%;
+  transform:translateX(-50%);
+  z-index:30;display:flex;gap:8px;
+  pointer-events:none;
+}
+.dot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(255,200,120,.1);
+  border:1px solid rgba(255,200,120,.28);
+  transition:transform .45s cubic-bezier(.34,1.56,.64,1),
+             background .45s, box-shadow .45s;
+}
+.dot.on{
+  background:#ffc850;border-color:#fff8d0;
+  box-shadow:0 0 10px 2px rgba(255,200,80,.85);
+  transform:scale(1.35);
+}
+
+.hint{
+  position:fixed;bottom:7%;left:50%;
+  transform:translateX(-50%);
+  z-index:30;
+  font-family:'Hind Siliguri', sans-serif;
+  font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;
+  color:#7a6844;opacity:0;
+  animation:hintIn 1.4s ease 1.8s forwards, breathe 2.6s ease-in-out 3.2s infinite;
+  pointer-events:none;white-space:nowrap;
+}
+@keyframes hintIn{
+  from{opacity:0;transform:translateX(-50%) translateY(6px)}
+  to  {opacity:.85;transform:translateX(-50%) translateY(0)}
+}
+@keyframes breathe{
+  0%,100%{opacity:.5}
+  50%    {opacity:.95}
+}
+
+/* ================================
+   FLASH
+   ================================ */
+.flash{
+  position:fixed;inset:0;z-index:55;
+  background:radial-gradient(circle at 50% 55%, rgba(255,220,140,.6), transparent 55%);
+  pointer-events:none;opacity:0;
+}
+.flash.go{animation:flashPop 1.6s ease-out forwards}
+@keyframes flashPop{
+  0%{opacity:0}
+  12%{opacity:.95}
+  100%{opacity:0}
+}
+
+/* ================================
+   FINAL PARCHMENT (no backdrop-filter)
+   ================================ */
+.final{
+  position:fixed;inset:0;z-index:60;
+  display:flex;align-items:center;justify-content:center;
+  padding:22px;
+  background:rgba(4,3,8,.9);
+  opacity:0;pointer-events:none;
+  transition:opacity .8s ease;
+}
+.final.show{opacity:1;pointer-events:auto}
+
+.parchment{
+  position:relative;
+  width:min(94vw,460px);
+  max-height:88vh;
+  padding:44px 34px 38px;
+  border-radius:6px;
+  background:
+    radial-gradient(ellipse at 30% 15%, #f7eed8 0%, #ede0c2 45%, #e0d0aa 85%, #d4c096 100%);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.7),
+    inset 0 0 60px rgba(139,94,52,.13),
+    inset 0 0 0 1px rgba(139,94,52,.2);
+  text-align:center;
+  transform:translateY(50px) scale(.9);
+  opacity:0;
+  transition:transform .9s cubic-bezier(.2,1.1,.3,1), opacity .7s;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.final.show .parchment{transform:translateY(0) scale(1);opacity:1}
+.parchment::after{
+  content:'';position:absolute;inset:14px;
+  border:1px solid rgba(139,94,52,.3);
+  border-radius:4px;pointer-events:none;
+}
+.parchment-inner{position:relative;z-index:2}
+
+.parchment .label{
+  font-family:'Hind Siliguri', sans-serif;
+  font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;
+  color:#8b5e34;font-weight:500;
+  margin-bottom:20px;
+}
+.parchment h2{
+  font-family:'Tiro Bangla', serif;
+  font-size:clamp(1.7rem,6.4vw,2.2rem);
+  font-weight:400;color:#2a1f14;
+  line-height:1.35;margin-bottom:22px;
+  letter-spacing:-.3px;
+}
+.parchment .divider{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;margin:22px 0;opacity:.55;
+}
+.parchment .divider .line{
+  width:50px;height:1px;
+  background:linear-gradient(to right,transparent,#8b5e34,transparent);
+}
+.parchment .divider .mark{
+  color:#8b5e34;font-size:11px;
+  letter-spacing:.4em;padding-left:.4em;
+}
+.parchment p{
+  font-family:'Tiro Bangla', serif;
+  font-size:clamp(.95rem,3.5vw,1.05rem);
+  line-height:2;color:#3a2a1a;
+  margin-bottom:14px;
+}
+.parchment p.soft{color:#6b4a2a;font-style:italic}
+.parchment .sign{
+  font-family:'Tiro Bangla', serif;
+  font-style:italic;font-size:.92rem;
+  color:#6b4a2a;text-align:right;
+  margin-top:20px;padding-right:8px;
+}
+.parchment-buttons{
+  display:flex;gap:10px;flex-wrap:wrap;
+  justify-content:center;margin-top:24px;
+}
+.parchment button{
+  background:transparent;
+  color:#8b5e34;
+  border:1px solid rgba(139,94,52,.4);
+  padding:10px 22px;border-radius:50px;
+  font-size:10px;letter-spacing:2.2px;
+  text-transform:uppercase;cursor:pointer;
+  transition:background .25s, border-color .25s, color .25s;
+  font-family:'Hind Siliguri', sans-serif;
+  font-weight:500;
+}
+.parchment button:hover{
+  background:rgba(139,94,52,.1);
+  border-color:#8b5e34;color:#2a1f14;
+}
+.parchment button.primary{
+  background:rgba(139,94,52,.14);
+  border-color:rgba(139,94,52,.55);
+}
+
+/* ================================
+   READ OVERLAY
+   ================================ */
+.read-overlay{
+  position:fixed;inset:0;z-index:90;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  background:rgba(2,2,6,.94);
+  opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+}
+.read-overlay.show{opacity:1;pointer-events:auto}
+
+.read-close{
+  position:fixed;
+  top:26px;right:26px;
+  z-index:95;
+  width:40px;height:40px;
+  border-radius:50%;
+  background:rgba(20,15,8,.85);
+  border:1px solid rgba(255,210,140,.35);
+  color:#e8d8b0;
+  font-size:16px;font-weight:300;
+  line-height:1;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .25s, border-color .25s, color .25s, transform .3s;
+  opacity:0;
+  transform:scale(.6) rotate(-60deg);
+}
+.read-overlay.show .read-close{
+  opacity:1;
+  transform:scale(1) rotate(0);
+  transition:opacity .4s ease .25s, transform .5s cubic-bezier(.2,1.3,.3,1) .25s,
+             background .25s, border-color .25s, color .25s;
+}
+.read-close:hover{
+  background:rgba(30,22,12,.95);
+  border-color:rgba(255,210,140,.7);
+  color:#fff2c4;
+}
+@media (max-width:480px){
+  .read-close{top:18px;right:18px;width:36px;height:36px;font-size:15px}
+}
+
+.read-paper{
+  position:relative;
+  width:100%;
+  max-width:680px;
+  max-height:calc(100vh - 40px);
+  border-radius:4px;
+  background:
+    radial-gradient(ellipse at 30% 15%, #f7eed8 0%, #ede0c2 45%, #e0d0aa 85%, #d4c096 100%);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.8),
+    inset 0 0 0 1px rgba(139,94,52,.2);
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  transform:translateY(40px) scale(.96);
+  opacity:0;
+  transition:transform .7s cubic-bezier(.2,1.1,.3,1), opacity .45s;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(139,94,52,.4) transparent;
+}
+.read-overlay.show .read-paper{
+  transform:translateY(0) scale(1);
+  opacity:1;
+}
+.read-paper::-webkit-scrollbar{width:8px}
+.read-paper::-webkit-scrollbar-track{background:transparent}
+.read-paper::-webkit-scrollbar-thumb{
+  background:rgba(139,94,52,.35);
+  border-radius:4px;
+}
+
+.read-inner{
+  position:relative;z-index:2;
+  padding:76px 52px 90px;
+  color:#2a1f14;
+  font-family:'Tiro Bangla', serif;
+}
+@media (max-width:520px){
+  .read-inner{padding:60px 26px 70px}
+}
+
+.read-header{text-align:center;margin-bottom:50px}
+.read-header .ornament{
+  color:#8b5e34;font-size:12px;
+  letter-spacing:.5em;padding-left:.5em;
+  margin-bottom:22px;opacity:.7;
+}
+.read-header h2{
+  font-family:'Tiro Bangla', serif;
+  font-size:clamp(1.7rem,5.4vw,2.3rem);
+  font-weight:400;color:#2a1f14;
+  letter-spacing:-.4px;line-height:1.3;margin-bottom:18px;
+}
+.read-header .sub{
+  font-family:'Hind Siliguri', sans-serif;
+  font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;
+  color:#8b5e34;font-weight:500;opacity:.85;
+}
+
+.read-divider{
+  display:flex;align-items:center;justify-content:center;
+  gap:16px;margin:46px 0;opacity:.5;
+}
+.read-divider .line{
+  width:56px;height:1px;
+  background:linear-gradient(to right,transparent,#8b5e34,transparent);
+}
+.read-divider .mark{
+  color:#8b5e34;font-size:11px;
+  letter-spacing:.5em;padding-left:.5em;
+}
+
+.read-prose{
+  font-family:'Tiro Bangla', serif;
+  font-size:clamp(1rem,3.6vw,1.12rem);
+  line-height:2.15;
+  color:#2a1f14;
+  text-align:justify;
+  letter-spacing:.1px;
+}
+.read-prose::first-letter{
+  font-family:'Galada', cursive;
+  font-size:3.6rem;
+  float:left;
+  line-height:.9;
+  padding:8px 14px 0 0;
+  color:#8b5e34;
+}
+.read-prose .accent{color:#8b5e34;font-style:italic}
+
+.read-verse{
+  font-family:'Tiro Bangla', serif;
+  font-size:clamp(1.08rem,4vw,1.28rem);
+  line-height:2.3;
+  color:#2a1f14;
+  text-align:center;
+}
+.read-verse p{margin-bottom:.3em}
+.read-verse .soft{color:#6b4a2a;font-style:italic}
+.read-verse .strong{color:#2a1f14;font-weight:500}
+.read-verse .gold{
+  color:#8b5e34;
+  font-family:'Galada', cursive;
+  font-size:1.15em;
+}
+
+.read-question{
+  font-family:'Tiro Bangla', serif;
+  font-size:clamp(1.12rem,4.2vw,1.4rem);
+  line-height:2.15;
+  color:#2a1f14;
+  text-align:center;
+  font-style:italic;
+  padding:14px 10px;
+}
+.read-question::before{
+  content:'❝';
+  display:block;
+  font-family:'Galada', cursive;
+  font-size:2rem;color:#8b5e34;
+  opacity:.5;line-height:1;margin-bottom:10px;
+}
+.read-question::after{
+  content:'❞';
+  display:block;
+  font-family:'Galada', cursive;
+  font-size:2rem;color:#8b5e34;
+  opacity:.5;line-height:1;margin-top:10px;
+}
+
+.read-footer{
+  text-align:center;
+  margin-top:60px;
+  font-family:'Hind Siliguri', sans-serif;
+  font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;
+  color:#8b5e34;opacity:.55;
+}
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+@media (max-width:480px){
+  .poem-sky{top:12%;padding:0 20px;gap:9px;max-height:46vh}
+  .poem-line{line-height:1.75}
+  .ground{bottom:9%;gap:8px}
+  .moon{width:52px;height:52px;top:11%;right:10%}
+  .parchment{padding:36px 24px 30px}
+  .read-paper{max-height:calc(100vh - 24px)}
+  .read-overlay{padding:12px}
+}
+
+/* ================================
+   REDUCED MOTION
+   ================================ */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <canvas id="stars"></canvas>
+  <div class="moon"></div>
+  <svg class="hills back" viewBox="0 0 1000 300" preserveAspectRatio="none">
+    <path d="M0,300 L0,195 Q120,135 260,175 Q400,215 520,155 Q640,95 780,150 Q880,180 1000,150 L1000,300 Z" fill="#0a0816"/>
+  </svg>
+  <svg class="hills front" viewBox="0 0 1000 300" preserveAspectRatio="none">
+    <path d="M0,300 L0,240 Q80,200 180,225 Q300,255 420,215 Q560,170 700,210 Q820,240 920,215 L1000,225 L1000,300 Z" fill="#04030a"/>
+  </svg>
+  <div class="horizon"></div>
+</div>
+
+<div class="grain"></div>
+
+<button class="read-btn" id="readBtn" aria-label="সম্পূর্ণ লেখা পড়ুন">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+  </svg>
+  <span>পড়ুন</span>
+</button>
+
+<div class="hud-top">
+  <div class="label">A Birthday Wish</div>
+  <h1>অসমাপ্ত উপাখ্যান</h1>
+</div>
+
+<div class="poem-sky" id="poemSky"></div>
+<div class="ground" id="ground"></div>
+<div class="dots" id="dots"></div>
+<div class="hint" id="hint">ফানুশ ছেড়ে দাও ✨</div>
+<div class="flash" id="flash"></div>
+
+<div class="final" id="final">
+  <div class="parchment">
+    <div class="parchment-inner">
+      <div class="label">আজকের দিনে</div>
+      <h2>শুভ জন্মদিন</h2>
+      <div class="divider">
+        <span class="line"></span>
+        <span class="mark">✦</span>
+        <span class="line"></span>
+      </div>
+      <p>এই লেখাটা তোমার জন্য ছিল — হয়তো একটু দেরিতে, হয়তো একটু অন্যভাবে।</p>
+      <p class="soft">তবু বলতে চাই — আজকের দিনটা ভালো কাটুক। সুস্থ থেকো, ভালো থেকো, আর নিজের যত্ন নিও। 🤍</p>
+      <div class="sign">— এক অজানা পাঠক</div>
+      <div class="parchment-buttons">
+        <button id="readFromFinal" class="primary">সম্পূর্ণ লেখা পড়ুন</button>
+        <button id="replay">আবার ছেড়ে দাও ↺</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="read-overlay" id="readOverlay">
+  <button class="read-close" id="readClose" aria-label="বন্ধ করো">✕</button>
+  <div class="read-paper" id="readPaper">
+    <div class="read-inner">
+
+      <div class="read-header">
+        <div class="ornament">✦ ❦ ✦</div>
+        <h2>অসমাপ্ত উপাখ্যান</h2>
+        <div class="sub">একটি অসমাপ্ত গল্প</div>
+      </div>
+
+      <p class="read-prose">
+        মানুষের চোখে অনেক কিছুই থাকে — হাসি, আনন্দ কিংবা ক্লান্তি। কিন্তু তোমার চোখের দিকে তাকালে আমি এক <span class="accent">শূন্যতা</span> খুঁজে পাই। ঠিক যেন এক শান্ত নদীর গভীরতা, যা বাইরে থেকে বোঝা দায়, কিন্তু ডুব দিলে তল খুঁজে পাওয়া অসম্ভব। রূপ তো ক্ষণস্থায়ী, কিন্তু মানুষের এই সম্মোহনী শক্তি — যা অনায়াসেই অন্যের মনোযোগ কেড়ে নেয় — সেটা বড় বিরল। অনেকটা সময়ের ফোঁটার মতো, যা বয়ে যায় ঠিকই, কিন্তু নিজের ছাপ রেখে যায় গভীরে।
+      </p>
+
+      <div class="read-divider">
+        <span class="line"></span><span class="mark">✦</span><span class="line"></span>
+      </div>
+
+      <div class="read-verse">
+        <p class="soft">হয়তো কোনো এক বিকেল,</p>
+        <p class="soft">আলো যখন একটু ক্ষীণ হবে,</p>
+        <p class="strong">তুমি বুঝবে —</p>
+        <p>এই চঞ্চল চোখের মায়ায়</p>
+        <p>আমি একাই পথ হারিয়েছি।</p>
+      </div>
+
+      <div class="read-divider">
+        <span class="line"></span><span class="mark">✧</span><span class="line"></span>
+      </div>
+
+      <div class="read-verse">
+        <p>সবাই রূপ খোঁজে আয়নায়,</p>
+        <p>আর আমি খুঁজে তোমার ওই চাহনির গহীনে —</p>
+        <p class="soft">যেখানে কোনো শব্দ নেই,</p>
+        <p class="soft">শুধু এক আকাশ নীরবতা,</p>
+        <p>আর তোমার প্রতি আমার না বলা</p>
+        <p class="gold">এক সমুদ্র গল্প।</p>
+      </div>
+
+      <div class="read-divider">
+        <span class="line"></span><span class="mark">✦</span><span class="line"></span>
+      </div>
+
+      <div class="read-question">
+        কেউ কি জানে? <br>
+        তুমি যখন হাসো,<br>
+        তখন পৃথিবীর সমস্ত কোলাহল<br>
+        কেন এক মুহূর্তের জন্য থেমে যায়?
+      </div>
+
+      <div class="read-divider">
+        <span class="line"></span><span class="mark">✦ ❦ ✦</span><span class="line"></span>
+      </div>
+
+      <div class="read-footer">— সমাপ্ত —</div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ⚙️ CONFIG
+   ============================================================ */
+const LANTERNS = [
+  { line: 'মানুষের চোখে অনেক কিছুই থাকে — <span class="soft">হাসি, আনন্দ কিংবা ক্লান্তি।</span>', hue: 32 },
+  { line: 'কিন্তু তোমার চোখের দিকে তাকালে আমি এক <span class="soft">শূন্যতা</span> খুঁজে পাই।', hue: 38 },
+  { line: 'ঠিক যেন এক শান্ত নদীর গভীরতা, যা বাইরে থেকে বোঝা দায়, কিন্তু ডুব দিলে তল খুঁজে পাওয়া অসম্ভব।', hue: 28 },
+  { line: 'রূপ তো ক্ষণস্থায়ী, কিন্তু মানুষের এই সম্মোহনী শক্তি — যা অনায়াসেই অন্যের মনোযোগ কেড়ে নেয় — সেটা বড় বিরল।', hue: 42 },
+  { line: 'হয়তো কোনো এক বিকেল, আলো যখন একটু ক্ষীণ হবে, তুমি বুঝবে — এই চঞ্চল চোখের মায়ায় আমি একাই পথ হারিয়েছি।', hue: 36 },
+  { line: 'সবাই রূপ খোঁজে আয়নায়, আর আমি খুঁজে তোমার ওই চাহনির গহীনে — যেখানে কোনো শব্দ নেই, শুধু এক আকাশ নীরবতা, আর তোমার প্রতি আমার না বলা <span class="soft">এক সমুদ্র গল্প।</span>', hue: 30 }
+];
+
+/* ============================================================
+   PERF FLAGS
+   ============================================================ */
+const isMobile = matchMedia('(pointer: coarse)').matches || innerWidth < 768;
+const isLowEnd = (navigator.hardwareConcurrency || 4) <= 4;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DPR_CAP = isMobile ? 1.5 : 2;
+const MAX_LANTERNS_ALIVE = isMobile ? 4 : 8;  // cap concurrent flying lanterns
+
+/* ============================================================
+   BUILD DOM
+   ============================================================ */
+const poemSky = document.getElementById('poemSky');
+const groundEl = document.getElementById('ground');
+const dotsEl   = document.getElementById('dots');
+const hintEl   = document.getElementById('hint');
+const final    = document.getElementById('final');
+const flash    = document.getElementById('flash');
+
+const groundEls = [];
+const dotEls    = [];
+const poemLines = [];
+
+LANTERNS.forEach((cfg, i) => {
+  const line = document.createElement('div');
+  line.className = 'poem-line';
+  line.innerHTML = cfg.line;
+  poemSky.appendChild(line);
+  poemLines.push(line);
+
+  const slot = document.createElement('button');
+  slot.type = 'button';
+  slot.className = 'lantern-slot';
+  slot.setAttribute('aria-label', 'Release lantern ' + (i + 1));
+  slot.innerHTML = `
+    <div class="lantern-body"></div>
+    <div class="lantern-base"></div>
+    <div class="lantern-hook"></div>
+  `;
+  slot.addEventListener('click', () => releaseLantern(i), { passive: true });
+  groundEl.appendChild(slot);
+  groundEls.push(slot);
+
+  const d = document.createElement('div');
+  d.className = 'dot';
+  dotsEl.appendChild(d);
+  dotEls.push(d);
+});
+
+/* ============================================================
+   CANVAS — stars + shooters + spark particles (all in one)
+   ============================================================ */
+const cvs = document.getElementById('stars');
+const ctx = cvs.getContext('2d', { alpha: true, desynchronized: true });
+let W = 0, H = 0, DPR = 1;
+let stars = [];
+let shooters = [];
+let sparks = [];
+let rafId = null;
+let paused = false;
+let lastFrame = performance.now();
+
+function resize(){
+  DPR = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+  W = innerWidth;
+  H = innerHeight;
+  cvs.width = Math.floor(W * DPR);
+  cvs.height = Math.floor(H * DPR);
+  cvs.style.width = W + 'px';
+  cvs.style.height = H + 'px';
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+  // Adaptive star count
+  const area = W * H;
+  const baseCount = isMobile ? 80 : 140;
+  const count = Math.min(baseCount, Math.floor(area / 9000));
+
+  stars = new Array(count);
+  for (let i = 0; i < count; i++){
+    stars[i] = {
+      x: Math.random() * W,
+      y: Math.random() * H * 0.9,
+      r: Math.random() * 1.2 + 0.2,
+      a: Math.random() * 0.5 + 0.15,
+      tw: Math.random() * 0.015 + 0.003,
+      dir: Math.random() > 0.5 ? 1 : -1,
+      warm: Math.random() > 0.7
+    };
+  }
+}
+
+window.addEventListener('resize', resize, { passive: true });
+window.addEventListener('orientationchange', resize, { passive: true });
+resize();
+
+/* spawn a shooting star occasionally */
+let shooterTimer = 0;
+function spawnShooter(){
+  shooters.push({
+    x: Math.random() * W * 0.6,
+    y: Math.random() * H * 0.35,
+    vx: 4 + Math.random() * 3,
+    vy: 2 + Math.random() * 2,
+    life: 1
+  });
+}
+
+/* ============================================================
+   MAIN RENDER LOOP
+   ============================================================ */
+function render(now){
+  if (paused){
+    rafId = requestAnimationFrame(render);
+    return;
+  }
+  const dt = Math.min(40, now - lastFrame);
+  lastFrame = now;
+
+  ctx.clearRect(0, 0, W, H);
+
+  /* ---- stars ---- */
+  for (let i = 0; i < stars.length; i++){
+    const s = stars[i];
+    s.a += s.tw * s.dir;
+    if (s.a > 0.88) s.dir = -1;
+    if (s.a < 0.12) s.dir = 1;
+    ctx.fillStyle = s.warm
+      ? `rgba(255,232,180,${s.a})`
+      : `rgba(210,220,245,${s.a})`;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, 6.283);
+    ctx.fill();
+  }
+
+  /* ---- shooting stars ---- */
+  shooterTimer += dt;
+  if (shooterTimer > (isMobile ? 5000 : 3200)){
+    shooterTimer = 0;
+    if (Math.random() < 0.6) spawnShooter();
+  }
+  for (let i = shooters.length - 1; i >= 0; i--){
+    const sh = shooters[i];
+    sh.x += sh.vx * (dt / 16);
+    sh.y += sh.vy * (dt / 16);
+    sh.life -= 0.012 * (dt / 16);
+    if (sh.life <= 0 || sh.x > W + 120 || sh.y > H + 120){
+      shooters.splice(i, 1); continue;
+    }
+    const tailX = sh.x - sh.vx * 14;
+    const tailY = sh.y - sh.vy * 14;
+    const grad = ctx.createLinearGradient(sh.x, sh.y, tailX, tailY);
+    grad.addColorStop(0, `rgba(255,240,200,${sh.life})`);
+    grad.addColorStop(1, 'rgba(255,240,200,0)');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(sh.x, sh.y);
+    ctx.lineTo(tailX, tailY);
+    ctx.stroke();
+  }
+
+  /* ---- sparks (from lantern burst / trail) ---- */
+  for (let i = sparks.length - 1; i >= 0; i--){
+    const p = sparks[i];
+    p.vy += 0.10 * (dt / 16);
+    p.x += p.vx * (dt / 16);
+    p.y += p.vy * (dt / 16);
+    p.life -= 0.018 * (dt / 16);
+    if (p.life <= 0){
+      sparks.splice(i, 1); continue;
+    }
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, 6.283);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  rafId = requestAnimationFrame(render);
+}
+
+rafId = requestAnimationFrame(render);
+
+/* pause when tab hidden — saves battery */
+document.addEventListener('visibilitychange', () => {
+  paused = document.hidden;
+  if (!paused) lastFrame = performance.now();
+});
+
+/* ============================================================
+   SPARK EMITTERS (canvas-based)
+   ============================================================ */
+function burstSparks(x, y, hue){
+  const N = isMobile ? 10 : 16;
+  for (let i = 0; i < N; i++){
+    const a = (Math.PI * 2 * i) / N + Math.random() * 0.4;
+    const sp = 2 + Math.random() * 4;
+    sparks.push({
+      x, y,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp - 1,
+      size: 1.6 + Math.random() * 1.4,
+      color: `hsl(${hue} 100% 78%)`,
+      life: 1
+    });
+  }
+  // cap sparks array
+  if (sparks.length > 220) sparks.splice(0, sparks.length - 220);
+}
+
+function trailSpark(x, y, hue){
+  sparks.push({
+    x, y,
+    vx: (Math.random() - 0.5) * 0.5,
+    vy: -0.2 - Math.random() * 0.4,
+    size: 1.4 + Math.random() * 1,
+    color: `hsl(${hue} 100% 82%)`,
+    life: 1
+  });
+}
+
+/* ============================================================
+   FLYING LANTERNS — DOM based, capped count
+   ============================================================ */
+const flying = [];
+let releasedCount = 0;
+let finished = false;
+
+function createFlyingLantern(x, y, hue){
+  const el = document.createElement('div');
+  el.className = 'flying-lantern';
+  el.innerHTML = `
+    <div class="lantern-body"></div>
+    <div class="lantern-base"></div>
+    <div class="lantern-hook"></div>
+  `;
+  const body = el.querySelector('.lantern-body');
+  body.style.background = `
+    radial-gradient(ellipse 58% 48% at 50% 72%,
+      hsl(${hue} 100% 92%) 0%,
+      hsl(${hue} 100% 74%) 16%,
+      hsl(${hue} 100% 58%) 32%,
+      hsl(${hue} 92% 46%) 55%,
+      hsl(${hue - 12} 85% 34%) 78%,
+      hsl(${hue - 20} 80% 18%) 100%)
+  `;
+  el.querySelector('.lantern-base').style.background =
+    `radial-gradient(ellipse, hsl(${hue} 100% 92%) 0%, hsl(${hue} 100% 58%) 45%, hsl(${hue - 20} 80% 22%) 100%)`;
+  document.body.appendChild(el);
+  return {
+    el, x, y,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: -0.7 - Math.random() * 0.3,
+    swayPhase: Math.random() * Math.PI * 2,
+    swaySpeed: 0.018 + Math.random() * 0.01,
+    scale: 1, alpha: 1, age: 0, hue,
+    lastX: x, lastY: y
+  };
+}
+
+function releaseLantern(i){
+  if (groundEls[i].classList.contains('released') || finished) return;
+
+  const rect = groundEls[i].getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+
+  groundEls[i].classList.add('released');
+  dotEls[i].classList.add('on');
+
+  const l = createFlyingLantern(cx, cy, LANTERNS[i].hue);
+  flying.push(l);
+  if (flying.length > MAX_LANTERNS_ALIVE){
+    const old = flying.shift();
+    old.el.remove();
+  }
+
+  setTimeout(() => { poemLines[i].classList.add('on'); }, 700);
+  burstSparks(cx, cy, LANTERNS[i].hue);
+  releasedCount++;
+
+  if (releasedCount === 1){
+    hintEl.style.animation = 'none';
+    hintEl.style.opacity = '0';
+  }
+  if (releasedCount === LANTERNS.length){
+    setTimeout(triggerFinale, 1600);
+  }
+}
+
+/* ============================================================
+   LANTERN PHYSICS LOOP — separate rAF so canvas loop stays clean
+   ============================================================ */
+let lanLast = performance.now();
+function lanternTick(now){
+  const dt = Math.min(40, now - lanLast);
+  lanLast = now;
+
+  for (let i = flying.length - 1; i >= 0; i--){
+    const l = flying[i];
+    l.age += dt / 1000;
+    l.vy -= 0.008 * (dt / 16);
+    l.swayPhase += l.swaySpeed * (dt / 16);
+    const sway = Math.sin(l.swayPhase) * 0.55;
+    l.x += (l.vx + sway) * (dt / 16);
+    l.y += l.vy * (dt / 16);
+
+    const progress = Math.max(0, Math.min(1, 1 - l.y / (H * 0.75)));
+    l.scale = 1 - progress * 0.5;
+    l.alpha = Math.max(0, 1 - progress * 1.08);
+    const rot = Math.sin(l.swayPhase) * 4;
+
+    l.el.style.transform =
+      `translate3d(${(l.x).toFixed(1)}px, ${(l.y).toFixed(1)}px, 0) translate(-50%,-50%) scale(${l.scale.toFixed(2)}) rotate(${rot.toFixed(1)}deg)`;
+    l.el.style.opacity = l.alpha.toFixed(2);
+
+    // trail spark throttle: less on mobile
+    if (l.age > 0.35 && Math.random() < (isMobile ? 0.18 : 0.32)){
+      trailSpark(l.x + (Math.random() - 0.5) * 18, l.y + 18, l.hue);
+    }
+
+    if (l.y < -140 || l.alpha <= 0.02){
+      l.el.remove();
+      flying.splice(i, 1);
+    }
+  }
+  requestAnimationFrame(lanternTick);
+}
+requestAnimationFrame(lanternTick);
+
+/* ============================================================
+   FINALE
+   ============================================================ */
+function triggerFinale(){
+  finished = true;
+  hintEl.style.display = 'none';
+  flash.classList.add('go');
+
+  const cx = W / 2;
+  const cy = H * 0.5;
+  for (let k = 0; k < 3; k++){
+    setTimeout(() => burstSparks(cx, cy, 38), k * 220);
+  }
+  setTimeout(() => { final.classList.add('show'); }, 1000);
+}
+
+/* ============================================================
+   REPLAY
+   ============================================================ */
+document.getElementById('replay').addEventListener('click', () => {
+  final.classList.remove('show');
+  flash.classList.remove('go');
+  setTimeout(() => {
+    flying.forEach(l => l.el.remove());
+    flying.length = 0;
+    sparks.length = 0;
+    releasedCount = 0;
+    finished = false;
+    groundEls.forEach(g => g.classList.remove('released'));
+    dotEls.forEach(d => d.classList.remove('on'));
+    poemLines.forEach(l => l.classList.remove('on'));
+    hintEl.style.display = '';
+    hintEl.style.opacity = '';
+    hintEl.style.animation = '';
+  }, 400);
+});
+
+/* ============================================================
+   READ OVERLAY
+   ============================================================ */
+const readOverlay = document.getElementById('readOverlay');
+const readBtn = document.getElementById('readBtn');
+const readClose = document.getElementById('readClose');
+const readFromFinal = document.getElementById('readFromFinal');
+const readPaper = document.getElementById('readPaper');
+
+function openRead(){
+  readOverlay.classList.add('show');
+  readPaper.scrollTop = 0;
+}
+function closeRead(){
+  readOverlay.classList.remove('show');
+}
+
+readBtn.addEventListener('click', openRead, { passive: true });
+readFromFinal.addEventListener('click', openRead, { passive: true });
+readClose.addEventListener('click', closeRead, { passive: true });
+
+readOverlay.addEventListener('click', (e) => {
+  if (e.target === readOverlay) closeRead();
+}, { passive: true });
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && readOverlay.classList.contains('show')) closeRead();
+});
+</script>
+</body>
+</html>
