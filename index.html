@@ -33,12 +33,11 @@ body{
     radial-gradient(ellipse at 50% 45%, #0e0f24 0%, #07080f 55%, #000 100%);
   overflow:hidden;
   transform:translateZ(0);
-  will-change:transform;
 }
 
-#stars{position:absolute;inset:0;pointer-events:none;z-index:1;display:block}
+#stars{position:absolute;inset:0;pointer-events:none;z-index:1;display:block;cursor:crosshair}
 
-/* grain — pure CSS dot pattern, no SVG noise */
+/* grain — pure CSS dot pattern */
 .grain{
   position:fixed;inset:0;
   pointer-events:none;z-index:2;
@@ -71,7 +70,6 @@ body{
     radial-gradient(ellipse 10% 9% at 42% 68%, rgba(140,110,70,.3), transparent 70%),
     radial-gradient(ellipse 8% 7% at 55% 32%, rgba(140,110,70,.28), transparent 70%);
 }
-/* animated glow as a pseudo element — opacity only, cheap */
 .moon::after{
   content:'';position:absolute;inset:-40%;border-radius:50%;
   background:radial-gradient(circle,rgba(255,232,190,.22),transparent 60%);
@@ -87,6 +85,7 @@ body{
 .hills.back{z-index:1;opacity:.7;height:52%}
 .hills.front{z-index:2;opacity:1;height:42%}
 
+/* ---------- HORIZON GLOW ---------- */
 .horizon{
   position:absolute;left:0;right:0;bottom:0;
   height:38%;
@@ -95,6 +94,53 @@ body{
     rgba(255,140,60,.05) 40%,
     transparent);
   pointer-events:none;z-index:3;
+}
+
+/* ---------- WATER (reflection) ---------- */
+.water{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:7.5%;
+  z-index:4;
+  pointer-events:none;
+  overflow:hidden;
+  background:linear-gradient(to top,
+    rgba(6,10,25,.96) 0%,
+    rgba(12,18,40,.75) 35%,
+    rgba(18,25,50,.4) 70%,
+    rgba(18,25,50,0) 100%);
+}
+.water::before{
+  content:'';
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    90deg,
+    transparent 0px, transparent 28px,
+    rgba(255,205,145,.07) 28px, rgba(255,205,145,.07) 30px,
+    transparent 30px, transparent 60px
+  );
+  animation:waterShimmer 14s linear infinite;
+  opacity:.9;
+}
+@keyframes waterShimmer{
+  0%   { transform:translateX(-80px); }
+  100% { transform:translateX(80px); }
+}
+.water::after{
+  content:'';
+  position:absolute;
+  top:-30%;right:12%;
+  width:100px;height:180%;
+  background:radial-gradient(ellipse at top,
+    rgba(255,232,190,.5) 0%,
+    rgba(255,215,160,.2) 30%,
+    transparent 70%);
+  filter:blur(6px);
+  animation:moonReflect 6s ease-in-out infinite;
+}
+@keyframes moonReflect{
+  0%,100%{opacity:.65}
+  50%    {opacity:1}
 }
 
 /* ================================
@@ -160,6 +206,29 @@ body{
 @media (max-width:380px){
   .read-btn span{display:none}
   .read-btn{padding:9px;border-radius:50%}
+}
+
+/* ================================
+   WISH COUNTER (bottom-left)
+   ================================ */
+.wish-counter{
+  position:fixed;
+  left:22px;bottom:22px;
+  z-index:32;
+  font-family:'Hind Siliguri', sans-serif;
+  font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;
+  color:#8b7550;
+  opacity:0;
+  transition:opacity .6s ease;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.wish-counter.show{opacity:.85}
+.wish-counter .num{
+  color:#ffc850;
+  font-weight:600;
+  font-size:11px;
 }
 
 /* ================================
@@ -239,7 +308,6 @@ body{
   animation:none;
 }
 
-/* lantern body — 2 shadow layers instead of 4 */
 .lantern-body{
   position:absolute;inset:0;
   border-radius:50% 50% 42% 42% / 60% 60% 40% 40%;
@@ -299,6 +367,63 @@ body{
 }
 
 /* ================================
+   7TH SPECIAL LANTERN
+   ================================ */
+.special-lantern{
+  position:fixed;
+  pointer-events:none;z-index:19;
+  width:clamp(46px,9.5vw,60px);
+  aspect-ratio:5 / 6.4;
+  will-change:transform, opacity;
+  transform:translate3d(0,0,0);
+  filter:brightness(1.15);
+}
+.special-lantern .lantern-body{
+  background:
+    radial-gradient(ellipse 58% 48% at 50% 72%,
+      #ffffff 0%, #fffbe0 16%, #ffe898 32%,
+      #ffc850 55%, #ff9c30 78%, #a82800 100%);
+  box-shadow:
+    0 0 28px 8px rgba(255,220,150,.85),
+    0 0 60px 20px rgba(255,180,80,.45),
+    inset 0 -4px 10px rgba(100,20,0,.4);
+}
+
+/* ================================
+   WISH BUBBLE (tap sky → wish)
+   ================================ */
+.wish-bubble{
+  position:fixed;
+  z-index:40;
+  pointer-events:none;
+  padding:8px 14px;
+  border-radius:20px;
+  background:rgba(20,15,8,.85);
+  border:1px solid rgba(255,210,140,.4);
+  color:#e8d8b0;
+  font-family:'Tiro Bangla', serif;
+  font-size:clamp(11px,3vw,13px);
+  letter-spacing:.3px;
+  white-space:nowrap;
+  box-shadow:
+    0 8px 24px rgba(0,0,0,.5),
+    0 0 24px rgba(255,200,120,.25);
+  transform:translate(-50%,-50%);
+  animation:wishFloat 2.6s cubic-bezier(.25,.8,.3,1) forwards;
+}
+@keyframes wishFloat{
+  0%  {opacity:0;transform:translate(-50%,-50%) scale(.5)}
+  15% {opacity:1;transform:translate(-50%,-100%) scale(1)}
+  75% {opacity:1;transform:translate(-50%,-200%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-260%) scale(.9)}
+}
+.wish-bubble .star{
+  color:#ffc850;
+  margin-right:4px;
+  filter:drop-shadow(0 0 4px rgba(255,200,80,.9));
+}
+
+/* ================================
    DOTS + HINT
    ================================ */
 .dots{
@@ -330,6 +455,7 @@ body{
   color:#7a6844;opacity:0;
   animation:hintIn 1.4s ease 1.8s forwards, breathe 2.6s ease-in-out 3.2s infinite;
   pointer-events:none;white-space:nowrap;
+  transition:opacity .4s ease;
 }
 @keyframes hintIn{
   from{opacity:0;transform:translateX(-50%) translateY(6px)}
@@ -356,7 +482,7 @@ body{
 }
 
 /* ================================
-   FINAL PARCHMENT (no backdrop-filter)
+   FINAL PARCHMENT
    ================================ */
 .final{
   position:fixed;inset:0;z-index:60;
@@ -654,11 +780,9 @@ body{
   .parchment{padding:36px 24px 30px}
   .read-paper{max-height:calc(100vh - 24px)}
   .read-overlay{padding:12px}
+  .wish-counter{left:16px;bottom:16px;font-size:9px}
 }
 
-/* ================================
-   REDUCED MOTION
-   ================================ */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
     animation-duration:.01ms !important;
@@ -680,6 +804,7 @@ body{
     <path d="M0,300 L0,240 Q80,200 180,225 Q300,255 420,215 Q560,170 700,210 Q820,240 920,215 L1000,225 L1000,300 Z" fill="#04030a"/>
   </svg>
   <div class="horizon"></div>
+  <div class="water"></div>
 </div>
 
 <div class="grain"></div>
@@ -701,6 +826,11 @@ body{
 <div class="ground" id="ground"></div>
 <div class="dots" id="dots"></div>
 <div class="hint" id="hint">ফানুশ ছেড়ে দাও ✨</div>
+
+<div class="wish-counter" id="wishCounter">
+  <span class="num" id="wishNum">0</span> টি ইচ্ছা
+</div>
+
 <div class="flash" id="flash"></div>
 
 <div class="final" id="final">
@@ -798,14 +928,76 @@ const LANTERNS = [
   { line: 'সবাই রূপ খোঁজে আয়নায়, আর আমি খুঁজে তোমার ওই চাহনির গহীনে — যেখানে কোনো শব্দ নেই, শুধু এক আকাশ নীরবতা, আর তোমার প্রতি আমার না বলা <span class="soft">এক সমুদ্র গল্প।</span>', hue: 30 }
 ];
 
+const SPECIAL_LINE = 'আর তোমার জন্য — <span class="soft">একটা নীরব শুভেচ্ছা।</span>';
+
+/* Wishes shown when user taps the sky */
+const WISH_MESSAGES = [
+  'তোমার সব ইচ্ছা পূরণ হোক',
+  'সুখে থাকো সবসময়',
+  'ভালো কিছু হোক তোমার',
+  'হাসিমুখে থাকো',
+  'নিজের যত্ন নিও',
+  'স্বপ্নগুলো সত্যি হোক',
+  'শান্তি খুঁজে পাও',
+  'যা চাও, তাই পাও',
+  'ভালোবাসা পেয়ো',
+  'সুস্থ থেকো'
+];
+
 /* ============================================================
    PERF FLAGS
    ============================================================ */
 const isMobile = matchMedia('(pointer: coarse)').matches || innerWidth < 768;
 const isLowEnd = (navigator.hardwareConcurrency || 4) <= 4;
-const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const DPR_CAP = isMobile ? 1.5 : 2;
-const MAX_LANTERNS_ALIVE = isMobile ? 4 : 8;  // cap concurrent flying lanterns
+const MAX_LANTERNS_ALIVE = isMobile ? 4 : 8;
+const FIREFLY_COUNT = isMobile ? 6 : 12;
+
+/* ============================================================
+   AUDIO — bell chime (Web Audio API, no files)
+   ============================================================ */
+let audioCtx = null;
+function initAudio(){
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  } catch(e){ audioCtx = null; }
+}
+function playBell(freq){
+  if (!audioCtx) return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const t = audioCtx.currentTime;
+  const baseFreq = freq || 880;
+
+  // Fundamental
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = baseFreq;
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(0.12, t + 0.008);
+  gain.gain.exponentialRampToValueAtTime(0.0008, t + 1.4);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(t);
+  osc.stop(t + 1.5);
+
+  // Harmonic — soft overtone
+  const osc2 = audioCtx.createOscillator();
+  const gain2 = audioCtx.createGain();
+  osc2.type = 'sine';
+  osc2.frequency.value = baseFreq * 2.01;
+  gain2.gain.setValueAtTime(0, t);
+  gain2.gain.linearRampToValueAtTime(0.04, t + 0.008);
+  gain2.gain.exponentialRampToValueAtTime(0.0004, t + 0.9);
+  osc2.connect(gain2).connect(audioCtx.destination);
+  osc2.start(t);
+  osc2.stop(t + 1.0);
+}
+
+/* init on first user interaction */
+['click','touchstart','keydown'].forEach(ev => {
+  window.addEventListener(ev, initAudio, { once: true, passive: true });
+});
 
 /* ============================================================
    BUILD DOM
@@ -816,6 +1008,8 @@ const dotsEl   = document.getElementById('dots');
 const hintEl   = document.getElementById('hint');
 const final    = document.getElementById('final');
 const flash    = document.getElementById('flash');
+const wishCounter = document.getElementById('wishCounter');
+const wishNum = document.getElementById('wishNum');
 
 const groundEls = [];
 const dotEls    = [];
@@ -847,8 +1041,14 @@ LANTERNS.forEach((cfg, i) => {
   dotEls.push(d);
 });
 
+/* special lantern's sky line — hidden initially */
+const specialLine = document.createElement('div');
+specialLine.className = 'poem-line';
+specialLine.innerHTML = SPECIAL_LINE;
+poemSky.appendChild(specialLine);
+
 /* ============================================================
-   CANVAS — stars + shooters + spark particles (all in one)
+   CANVAS — stars + shooters + sparks + fireflies + wish stars
    ============================================================ */
 const cvs = document.getElementById('stars');
 const ctx = cvs.getContext('2d', { alpha: true, desynchronized: true });
@@ -856,6 +1056,8 @@ let W = 0, H = 0, DPR = 1;
 let stars = [];
 let shooters = [];
 let sparks = [];
+let fireflies = [];
+let wishStars = [];
 let rafId = null;
 let paused = false;
 let lastFrame = performance.now();
@@ -870,7 +1072,6 @@ function resize(){
   cvs.style.height = H + 'px';
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
-  // Adaptive star count
   const area = W * H;
   const baseCount = isMobile ? 80 : 140;
   const count = Math.min(baseCount, Math.floor(area / 9000));
@@ -887,13 +1088,29 @@ function resize(){
       warm: Math.random() > 0.7
     };
   }
+
+  // fireflies — near hills, lower part of screen
+  fireflies = new Array(FIREFLY_COUNT);
+  for (let i = 0; i < FIREFLY_COUNT; i++){
+    fireflies[i] = {
+      x: Math.random() * W,
+      y: H * (0.55 + Math.random() * 0.28),
+      baseY: 0,
+      r: 1.6 + Math.random() * 1.2,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.008 + Math.random() * 0.012,
+      driftX: (Math.random() - 0.5) * 0.3,
+      wobble: 20 + Math.random() * 30,
+      alpha: 0
+    };
+    fireflies[i].baseY = fireflies[i].y;
+  }
 }
 
 window.addEventListener('resize', resize, { passive: true });
 window.addEventListener('orientationchange', resize, { passive: true });
 resize();
 
-/* spawn a shooting star occasionally */
 let shooterTimer = 0;
 function spawnShooter(){
   shooters.push({
@@ -915,6 +1132,7 @@ function render(now){
   }
   const dt = Math.min(40, now - lastFrame);
   lastFrame = now;
+  const f = dt / 16;
 
   ctx.clearRect(0, 0, W, H);
 
@@ -932,6 +1150,71 @@ function render(now){
     ctx.fill();
   }
 
+  /* ---- wish stars (user-tapped) ---- */
+  for (let i = wishStars.length - 1; i >= 0; i--){
+    const ws = wishStars[i];
+    ws.age += dt / 1000;
+    ws.glow += (ws.targetGlow - ws.glow) * 0.08;
+
+    const pulse = 0.7 + Math.sin(ws.age * 2.5) * 0.3;
+    const r = ws.r * (1 + ws.glow * 0.6);
+
+    // outer glow
+    const grad = ctx.createRadialGradient(ws.x, ws.y, 0, ws.x, ws.y, r * 6);
+    grad.addColorStop(0, `rgba(255,225,150,${0.5 * ws.glow * pulse})`);
+    grad.addColorStop(0.4, `rgba(255,200,90,${0.18 * ws.glow * pulse})`);
+    grad.addColorStop(1, 'rgba(255,200,90,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(ws.x, ws.y, r * 6, 0, 6.283);
+    ctx.fill();
+
+    // core star
+    ctx.fillStyle = `rgba(255,248,220,${0.85 * ws.glow})`;
+    ctx.beginPath();
+    ctx.arc(ws.x, ws.y, r * 0.5, 0, 6.283);
+    ctx.fill();
+
+    // fade out after a while
+    if (ws.age > 4) {
+      ws.glow *= 0.97;
+      if (ws.glow < 0.02){
+        wishStars.splice(i, 1);
+      }
+    }
+  }
+
+  /* ---- fireflies ---- */
+  for (let i = 0; i < fireflies.length; i++){
+    const ff = fireflies[i];
+    ff.phase += ff.speed * f;
+    ff.x += ff.driftX * f;
+    ff.y = ff.baseY + Math.sin(ff.phase) * ff.wobble;
+
+    if (ff.x < -20) ff.x = W + 20;
+    if (ff.x > W + 20) ff.x = -20;
+
+    // pulsing alpha
+    const a = 0.5 + Math.sin(ff.phase * 1.7) * 0.5;
+    ff.alpha = a * 0.85;
+
+    // outer glow
+    const grad = ctx.createRadialGradient(ff.x, ff.y, 0, ff.x, ff.y, ff.r * 5);
+    grad.addColorStop(0, `rgba(255,235,140,${ff.alpha * 0.6})`);
+    grad.addColorStop(0.4, `rgba(180,230,120,${ff.alpha * 0.25})`);
+    grad.addColorStop(1, 'rgba(180,230,120,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(ff.x, ff.y, ff.r * 5, 0, 6.283);
+    ctx.fill();
+
+    // core
+    ctx.fillStyle = `rgba(255,248,180,${ff.alpha})`;
+    ctx.beginPath();
+    ctx.arc(ff.x, ff.y, ff.r * 0.5, 0, 6.283);
+    ctx.fill();
+  }
+
   /* ---- shooting stars ---- */
   shooterTimer += dt;
   if (shooterTimer > (isMobile ? 5000 : 3200)){
@@ -940,9 +1223,9 @@ function render(now){
   }
   for (let i = shooters.length - 1; i >= 0; i--){
     const sh = shooters[i];
-    sh.x += sh.vx * (dt / 16);
-    sh.y += sh.vy * (dt / 16);
-    sh.life -= 0.012 * (dt / 16);
+    sh.x += sh.vx * f;
+    sh.y += sh.vy * f;
+    sh.life -= 0.012 * f;
     if (sh.life <= 0 || sh.x > W + 120 || sh.y > H + 120){
       shooters.splice(i, 1); continue;
     }
@@ -959,13 +1242,13 @@ function render(now){
     ctx.stroke();
   }
 
-  /* ---- sparks (from lantern burst / trail) ---- */
+  /* ---- sparks ---- */
   for (let i = sparks.length - 1; i >= 0; i--){
     const p = sparks[i];
-    p.vy += 0.10 * (dt / 16);
-    p.x += p.vx * (dt / 16);
-    p.y += p.vy * (dt / 16);
-    p.life -= 0.018 * (dt / 16);
+    p.vy += 0.10 * f;
+    p.x += p.vx * f;
+    p.y += p.vy * f;
+    p.life -= 0.018 * f;
     if (p.life <= 0){
       sparks.splice(i, 1); continue;
     }
@@ -982,14 +1265,13 @@ function render(now){
 
 rafId = requestAnimationFrame(render);
 
-/* pause when tab hidden — saves battery */
 document.addEventListener('visibilitychange', () => {
   paused = document.hidden;
   if (!paused) lastFrame = performance.now();
 });
 
 /* ============================================================
-   SPARK EMITTERS (canvas-based)
+   SPARK EMITTERS
    ============================================================ */
 function burstSparks(x, y, hue){
   const N = isMobile ? 10 : 16;
@@ -1005,7 +1287,6 @@ function burstSparks(x, y, hue){
       life: 1
     });
   }
-  // cap sparks array
   if (sparks.length > 220) sparks.splice(0, sparks.length - 220);
 }
 
@@ -1021,32 +1302,98 @@ function trailSpark(x, y, hue){
 }
 
 /* ============================================================
-   FLYING LANTERNS — DOM based, capped count
+   TAP SKY → WISH
+   ============================================================ */
+let wishCount = 0;
+let lastWishTime = 0;
+
+cvs.addEventListener('click', handleWish, { passive: true });
+cvs.addEventListener('touchstart', (e) => {
+  // if tapping directly on canvas, handle as wish
+  const t = e.touches[0];
+  if (!t) return;
+  handleWish({ clientX: t.clientX, clientY: t.clientY, target: cvs });
+}, { passive: true });
+
+function handleWish(e){
+  // throttle
+  const now = performance.now();
+  if (now - lastWishTime < 320) return;
+  lastWishTime = now;
+
+  // only if clicked directly on canvas (not a lantern)
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  if (!el || (el !== cvs && !el.closest('.scene'))) return;
+  if (el.closest('.lantern-slot') || el.closest('.flying-lantern') || el.closest('.ground')) return;
+
+  const x = e.clientX;
+  const y = e.clientY;
+
+  // create a glowing wish star on canvas
+  wishStars.push({
+    x, y,
+    r: 1.8 + Math.random() * 0.8,
+    age: 0,
+    glow: 0,
+    targetGlow: 1
+  });
+  if (wishStars.length > 30) wishStars.shift();
+
+  // burst sparks at that spot
+  burstSparks(x, y, 42);
+
+  // play a soft high chime
+  playBell(1180 + Math.random() * 200);
+
+  // show a wish bubble
+  showWishBubble(x, y, WISH_MESSAGES[Math.floor(Math.random() * WISH_MESSAGES.length)]);
+
+  // update counter
+  wishCount++;
+  wishNum.textContent = wishCount;
+  wishCounter.classList.add('show');
+}
+
+function showWishBubble(x, y, text){
+  const el = document.createElement('div');
+  el.className = 'wish-bubble';
+  el.innerHTML = `<span class="star">✦</span>${text}`;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2800);
+}
+
+/* ============================================================
+   FLYING LANTERNS
    ============================================================ */
 const flying = [];
 let releasedCount = 0;
 let finished = false;
+let specialLanternSpawned = false;
 
-function createFlyingLantern(x, y, hue){
+function createFlyingLantern(x, y, hue, isSpecial){
   const el = document.createElement('div');
-  el.className = 'flying-lantern';
+  el.className = isSpecial ? 'flying-lantern special-lantern' : 'flying-lantern';
   el.innerHTML = `
     <div class="lantern-body"></div>
     <div class="lantern-base"></div>
     <div class="lantern-hook"></div>
   `;
-  const body = el.querySelector('.lantern-body');
-  body.style.background = `
-    radial-gradient(ellipse 58% 48% at 50% 72%,
-      hsl(${hue} 100% 92%) 0%,
-      hsl(${hue} 100% 74%) 16%,
-      hsl(${hue} 100% 58%) 32%,
-      hsl(${hue} 92% 46%) 55%,
-      hsl(${hue - 12} 85% 34%) 78%,
-      hsl(${hue - 20} 80% 18%) 100%)
-  `;
-  el.querySelector('.lantern-base').style.background =
-    `radial-gradient(ellipse, hsl(${hue} 100% 92%) 0%, hsl(${hue} 100% 58%) 45%, hsl(${hue - 20} 80% 22%) 100%)`;
+  if (!isSpecial){
+    const body = el.querySelector('.lantern-body');
+    body.style.background = `
+      radial-gradient(ellipse 58% 48% at 50% 72%,
+        hsl(${hue} 100% 92%) 0%,
+        hsl(${hue} 100% 74%) 16%,
+        hsl(${hue} 100% 58%) 32%,
+        hsl(${hue} 92% 46%) 55%,
+        hsl(${hue - 12} 85% 34%) 78%,
+        hsl(${hue - 20} 80% 18%) 100%)
+    `;
+    el.querySelector('.lantern-base').style.background =
+      `radial-gradient(ellipse, hsl(${hue} 100% 92%) 0%, hsl(${hue} 100% 58%) 45%, hsl(${hue - 20} 80% 22%) 100%)`;
+  }
   document.body.appendChild(el);
   return {
     el, x, y,
@@ -1055,7 +1402,7 @@ function createFlyingLantern(x, y, hue){
     swayPhase: Math.random() * Math.PI * 2,
     swaySpeed: 0.018 + Math.random() * 0.01,
     scale: 1, alpha: 1, age: 0, hue,
-    lastX: x, lastY: y
+    isSpecial: !!isSpecial
   };
 }
 
@@ -1069,7 +1416,7 @@ function releaseLantern(i){
   groundEls[i].classList.add('released');
   dotEls[i].classList.add('on');
 
-  const l = createFlyingLantern(cx, cy, LANTERNS[i].hue);
+  const l = createFlyingLantern(cx, cy, LANTERNS[i].hue, false);
   flying.push(l);
   if (flying.length > MAX_LANTERNS_ALIVE){
     const old = flying.shift();
@@ -1078,33 +1425,69 @@ function releaseLantern(i){
 
   setTimeout(() => { poemLines[i].classList.add('on'); }, 700);
   burstSparks(cx, cy, LANTERNS[i].hue);
+
+  // bell — different note per lantern (rising scale)
+  const notes = [660, 740, 830, 880, 990, 1100];
+  playBell(notes[i % notes.length]);
+
   releasedCount++;
 
   if (releasedCount === 1){
     hintEl.style.animation = 'none';
     hintEl.style.opacity = '0';
   }
-  if (releasedCount === LANTERNS.length){
-    setTimeout(triggerFinale, 1600);
+
+  if (releasedCount === LANTERNS.length && !specialLanternSpawned){
+    setTimeout(spawnSpecialLantern, 1200);
   }
 }
 
+/* 7th special lantern — auto-launched from bottom center */
+function spawnSpecialLantern(){
+  if (specialLanternSpawned || finished) return;
+  specialLanternSpawned = true;
+
+  const cx = W / 2;
+  const cy = H * 0.92;
+
+  const l = createFlyingLantern(cx, cy, 45, true);
+  l.vy = -0.6;
+  l.vx = 0;
+  flying.push(l);
+
+  // big burst
+  burstSparks(cx, cy, 45);
+  setTimeout(() => burstSparks(cx, cy - 20, 40), 150);
+
+  // grand chord
+  playBell(880);
+  setTimeout(() => playBell(1320), 200);
+  setTimeout(() => playBell(1760), 400);
+
+  // show special poem line after it rises
+  setTimeout(() => { specialLine.classList.add('on'); }, 900);
+
+  // then finale
+  setTimeout(triggerFinale, 2600);
+}
+
 /* ============================================================
-   LANTERN PHYSICS LOOP — separate rAF so canvas loop stays clean
+   LANTERN PHYSICS LOOP
    ============================================================ */
 let lanLast = performance.now();
 function lanternTick(now){
   const dt = Math.min(40, now - lanLast);
   lanLast = now;
+  const f = dt / 16;
 
   for (let i = flying.length - 1; i >= 0; i--){
     const l = flying[i];
     l.age += dt / 1000;
-    l.vy -= 0.008 * (dt / 16);
-    l.swayPhase += l.swaySpeed * (dt / 16);
+    l.vy -= 0.008 * f;
+    l.swayPhase += l.swaySpeed * f;
     const sway = Math.sin(l.swayPhase) * 0.55;
-    l.x += (l.vx + sway) * (dt / 16);
-    l.y += l.vy * (dt / 16);
+    l.x += (l.vx + sway) * f;
+    l.y += l.vy * f;
 
     const progress = Math.max(0, Math.min(1, 1 - l.y / (H * 0.75)));
     l.scale = 1 - progress * 0.5;
@@ -1115,9 +1498,10 @@ function lanternTick(now){
       `translate3d(${(l.x).toFixed(1)}px, ${(l.y).toFixed(1)}px, 0) translate(-50%,-50%) scale(${l.scale.toFixed(2)}) rotate(${rot.toFixed(1)}deg)`;
     l.el.style.opacity = l.alpha.toFixed(2);
 
-    // trail spark throttle: less on mobile
-    if (l.age > 0.35 && Math.random() < (isMobile ? 0.18 : 0.32)){
-      trailSpark(l.x + (Math.random() - 0.5) * 18, l.y + 18, l.hue);
+    // trail spark — special lantern trails more
+    const trailChance = l.isSpecial ? 0.5 : (isMobile ? 0.18 : 0.32);
+    if (l.age > 0.35 && Math.random() < trailChance){
+      trailSpark(l.x + (Math.random() - 0.5) * 18, l.y + 18, l.hue || 45);
     }
 
     if (l.y < -140 || l.alpha <= 0.02){
@@ -1133,6 +1517,7 @@ requestAnimationFrame(lanternTick);
    FINALE
    ============================================================ */
 function triggerFinale(){
+  if (finished) return;
   finished = true;
   hintEl.style.display = 'none';
   flash.classList.add('go');
@@ -1155,11 +1540,18 @@ document.getElementById('replay').addEventListener('click', () => {
     flying.forEach(l => l.el.remove());
     flying.length = 0;
     sparks.length = 0;
+    wishStars.length = 0;
     releasedCount = 0;
     finished = false;
+    specialLanternSpawned = false;
+    wishCount = 0;
+    wishNum.textContent = '0';
+    wishCounter.classList.remove('show');
+
     groundEls.forEach(g => g.classList.remove('released'));
     dotEls.forEach(d => d.classList.remove('on'));
     poemLines.forEach(l => l.classList.remove('on'));
+    specialLine.classList.remove('on');
     hintEl.style.display = '';
     hintEl.style.opacity = '';
     hintEl.style.animation = '';
