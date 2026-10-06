@@ -7,7 +7,7 @@
 <title>অসমাপ্ত উপাখ্যান — শুভ জন্মদিন</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@300;400;500;600&family=Galada&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@300;400;500;600&family=Galada&family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
@@ -37,7 +37,6 @@ body{
 
 #stars{position:absolute;inset:0;pointer-events:none;z-index:1;display:block;cursor:crosshair}
 
-/* grain — pure CSS dot pattern */
 .grain{
   position:fixed;inset:0;
   pointer-events:none;z-index:2;
@@ -49,7 +48,6 @@ body{
   background-size:120px 120px, 180px 180px, 90px 90px;
 }
 
-/* ---------- MOON ---------- */
 .moon{
   position:absolute;
   top:9%;right:12%;
@@ -85,7 +83,6 @@ body{
 .hills.back{z-index:1;opacity:.7;height:52%}
 .hills.front{z-index:2;opacity:1;height:42%}
 
-/* ---------- HORIZON GLOW ---------- */
 .horizon{
   position:absolute;left:0;right:0;bottom:0;
   height:38%;
@@ -96,7 +93,6 @@ body{
   pointer-events:none;z-index:3;
 }
 
-/* ---------- WATER (reflection) ---------- */
 .water{
   position:absolute;
   left:0;right:0;bottom:0;
@@ -175,9 +171,6 @@ body{
   to  {opacity:1;transform:translateY(0)}
 }
 
-/* ================================
-   READ BUTTON
-   ================================ */
 .read-btn{
   position:fixed;
   top:22px;left:22px;
@@ -208,9 +201,6 @@ body{
   .read-btn{padding:9px;border-radius:50%}
 }
 
-/* ================================
-   WISH COUNTER (bottom-left)
-   ================================ */
 .wish-counter{
   position:fixed;
   left:22px;bottom:22px;
@@ -231,9 +221,6 @@ body{
   font-size:11px;
 }
 
-/* ================================
-   POEM SKY
-   ================================ */
 .poem-sky{
   position:fixed;
   top:11%;left:0;right:0;
@@ -282,10 +269,11 @@ body{
   position:relative;background:transparent;
   border:none;padding:0;
   width:clamp(34px,7.5vw,46px);
-  aspect-ratio:5 / 6.4;
+  height:clamp(44px,9.6vw,59px);
   transition:transform .3s cubic-bezier(.34,1.56,.64,1), opacity .6s;
   animation:bob 4.5s ease-in-out infinite;
   will-change:transform;
+  flex-shrink:0;
 }
 .lantern-slot:nth-child(1){animation-delay:0s}
 .lantern-slot:nth-child(2){animation-delay:-.7s}
@@ -361,19 +349,16 @@ body{
 .flying-lantern{
   position:fixed;pointer-events:none;z-index:18;
   width:clamp(34px,7.5vw,46px);
-  aspect-ratio:5 / 6.4;
+  height:clamp(44px,9.6vw,59px);
   will-change:transform, opacity;
   transform:translate3d(0,0,0);
 }
 
-/* ================================
-   7TH SPECIAL LANTERN
-   ================================ */
 .special-lantern{
   position:fixed;
   pointer-events:none;z-index:19;
   width:clamp(46px,9.5vw,60px);
-  aspect-ratio:5 / 6.4;
+  height:clamp(59px,12.2vw,77px);
   will-change:transform, opacity;
   transform:translate3d(0,0,0);
   filter:brightness(1.15);
@@ -389,9 +374,6 @@ body{
     inset 0 -4px 10px rgba(100,20,0,.4);
 }
 
-/* ================================
-   WISH BUBBLE (tap sky → wish)
-   ================================ */
 .wish-bubble{
   position:fixed;
   z-index:40;
@@ -423,9 +405,6 @@ body{
   filter:drop-shadow(0 0 4px rgba(255,200,80,.9));
 }
 
-/* ================================
-   DOTS + HINT
-   ================================ */
 .dots{
   position:fixed;bottom:4.2%;left:50%;
   transform:translateX(-50%);
@@ -466,9 +445,6 @@ body{
   50%    {opacity:.95}
 }
 
-/* ================================
-   FLASH
-   ================================ */
 .flash{
   position:fixed;inset:0;z-index:55;
   background:radial-gradient(circle at 50% 55%, rgba(255,220,140,.6), transparent 55%);
@@ -585,13 +561,14 @@ body{
 }
 
 /* ================================
-   READ OVERLAY
+   READ OVERLAY — SIMPLE BOOK PAGE
+   (Demo 3 style)
    ================================ */
 .read-overlay{
   position:fixed;inset:0;z-index:90;
   display:flex;align-items:center;justify-content:center;
   padding:20px;
-  background:rgba(2,2,6,.94);
+  background:rgba(4,3,8,.94);
   opacity:0;pointer-events:none;
   transition:opacity .5s ease;
 }
@@ -629,17 +606,16 @@ body{
   .read-close{top:18px;right:18px;width:36px;height:36px;font-size:15px}
 }
 
+/* paper */
 .read-paper{
   position:relative;
   width:100%;
-  max-width:680px;
+  max-width:640px;
   max-height:calc(100vh - 40px);
-  border-radius:4px;
-  background:
-    radial-gradient(ellipse at 30% 15%, #f7eed8 0%, #ede0c2 45%, #e0d0aa 85%, #d4c096 100%);
+  background:#fdfbf5;
   box-shadow:
-    0 30px 80px rgba(0,0,0,.8),
-    inset 0 0 0 1px rgba(139,94,52,.2);
+    0 30px 80px rgba(0,0,0,.85),
+    0 0 0 1px rgba(0,0,0,.06);
   overflow-y:auto;
   overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
@@ -647,7 +623,7 @@ body{
   opacity:0;
   transition:transform .7s cubic-bezier(.2,1.1,.3,1), opacity .45s;
   scrollbar-width:thin;
-  scrollbar-color:rgba(139,94,52,.4) transparent;
+  scrollbar-color:rgba(120,100,70,.4) transparent;
 }
 .read-overlay.show .read-paper{
   transform:translateY(0) scale(1);
@@ -656,123 +632,80 @@ body{
 .read-paper::-webkit-scrollbar{width:8px}
 .read-paper::-webkit-scrollbar-track{background:transparent}
 .read-paper::-webkit-scrollbar-thumb{
-  background:rgba(139,94,52,.35);
+  background:rgba(120,100,70,.35);
   border-radius:4px;
 }
 
+/* inner padding — plain, no border, no ornament */
 .read-inner{
-  position:relative;z-index:2;
-  padding:76px 52px 90px;
-  color:#2a1f14;
-  font-family:'Tiro Bangla', serif;
-}
-@media (max-width:520px){
-  .read-inner{padding:60px 26px 70px}
+  padding:60px 56px 80px;
+  color:#1a1a1a;
+  font-family:'Noto Serif Bengali','Tiro Bangla',serif;
 }
 
-.read-header{text-align:center;margin-bottom:50px}
-.read-header .ornament{
-  color:#8b5e34;font-size:12px;
-  letter-spacing:.5em;padding-left:.5em;
-  margin-bottom:22px;opacity:.7;
+/* title */
+.read-inner h1{
+  font-family:'Noto Serif Bengali','Tiro Bangla',serif;
+  font-size:1.55rem;
+  font-weight:500;
+  text-align:center;
+  letter-spacing:.3px;
+  line-height:1.4;
+  color:#1a1a1a;
+  margin-bottom:6px;
 }
-.read-header h2{
-  font-family:'Tiro Bangla', serif;
-  font-size:clamp(1.7rem,5.4vw,2.3rem);
-  font-weight:400;color:#2a1f14;
-  letter-spacing:-.4px;line-height:1.3;margin-bottom:18px;
-}
-.read-header .sub{
-  font-family:'Hind Siliguri', sans-serif;
-  font-size:10px;letter-spacing:4px;
-  text-transform:uppercase;
-  color:#8b5e34;font-weight:500;opacity:.85;
-}
-
-.read-divider{
-  display:flex;align-items:center;justify-content:center;
-  gap:16px;margin:46px 0;opacity:.5;
-}
-.read-divider .line{
-  width:56px;height:1px;
-  background:linear-gradient(to right,transparent,#8b5e34,transparent);
-}
-.read-divider .mark{
-  color:#8b5e34;font-size:11px;
-  letter-spacing:.5em;padding-left:.5em;
+.read-inner .subtitle{
+  text-align:center;
+  font-size:.85rem;
+  color:#777;
+  margin-bottom:44px;
 }
 
-.read-prose{
-  font-family:'Tiro Bangla', serif;
-  font-size:clamp(1rem,3.6vw,1.12rem);
-  line-height:2.15;
-  color:#2a1f14;
+/* prose — justified, indented first line */
+.read-inner p.prose{
+  font-size:1rem;
+  line-height:1.95;
+  color:#1a1a1a;
+  margin-bottom:28px;
   text-align:justify;
-  letter-spacing:.1px;
-}
-.read-prose::first-letter{
-  font-family:'Galada', cursive;
-  font-size:3.6rem;
-  float:left;
-  line-height:.9;
-  padding:8px 14px 0 0;
-  color:#8b5e34;
-}
-.read-prose .accent{color:#8b5e34;font-style:italic}
-
-.read-verse{
-  font-family:'Tiro Bangla', serif;
-  font-size:clamp(1.08rem,4vw,1.28rem);
-  line-height:2.3;
-  color:#2a1f14;
-  text-align:center;
-}
-.read-verse p{margin-bottom:.3em}
-.read-verse .soft{color:#6b4a2a;font-style:italic}
-.read-verse .strong{color:#2a1f14;font-weight:500}
-.read-verse .gold{
-  color:#8b5e34;
-  font-family:'Galada', cursive;
-  font-size:1.15em;
+  text-indent:1.5em;
 }
 
-.read-question{
-  font-family:'Tiro Bangla', serif;
-  font-size:clamp(1.12rem,4.2vw,1.4rem);
-  line-height:2.15;
-  color:#2a1f14;
-  text-align:center;
+/* verse — indented left, plain */
+.read-inner .verse{
+  margin:28px 0;
+  padding-left:60px;
+}
+.read-inner .verse p{
+  font-size:1rem;
+  line-height:1.95;
+  color:#1a1a1a;
+  margin-bottom:2px;
+}
+
+/* question — indented, italic */
+.read-inner .question{
+  margin:36px 0 0;
+  padding-left:60px;
+  font-size:1rem;
+  line-height:1.95;
+  color:#1a1a1a;
   font-style:italic;
-  padding:14px 10px;
-}
-.read-question::before{
-  content:'❝';
-  display:block;
-  font-family:'Galada', cursive;
-  font-size:2rem;color:#8b5e34;
-  opacity:.5;line-height:1;margin-bottom:10px;
-}
-.read-question::after{
-  content:'❞';
-  display:block;
-  font-family:'Galada', cursive;
-  font-size:2rem;color:#8b5e34;
-  opacity:.5;line-height:1;margin-top:10px;
 }
 
-.read-footer{
+/* end mark */
+.read-inner .end{
   text-align:center;
-  margin-top:60px;
-  font-family:'Hind Siliguri', sans-serif;
-  font-size:10px;letter-spacing:3px;
-  text-transform:uppercase;
-  color:#8b5e34;opacity:.55;
+  margin-top:48px;
+  font-size:.9rem;
+  color:#888;
+  letter-spacing:2px;
 }
 
 /* ================================
    RESPONSIVE
    ================================ */
-@media (max-width:480px){
+@media (max-width:520px){
   .poem-sky{top:12%;padding:0 20px;gap:9px;max-height:46vh}
   .poem-line{line-height:1.75}
   .ground{bottom:9%;gap:8px}
@@ -781,6 +714,9 @@ body{
   .read-paper{max-height:calc(100vh - 24px)}
   .read-overlay{padding:12px}
   .wish-counter{left:16px;bottom:16px;font-size:9px}
+  .read-inner{padding:40px 24px 60px}
+  .read-inner .verse{padding-left:24px}
+  .read-inner .question{padding-left:24px}
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -859,57 +795,35 @@ body{
   <div class="read-paper" id="readPaper">
     <div class="read-inner">
 
-      <div class="read-header">
-        <div class="ornament">✦ ❦ ✦</div>
-        <h2>অসমাপ্ত উপাখ্যান</h2>
-        <div class="sub">একটি অসমাপ্ত গল্প</div>
-      </div>
+      <h1>অসমাপ্ত উপাখ্যান</h1>
+      <p class="subtitle">একটি অসমাপ্ত গল্প</p>
 
-      <p class="read-prose">
-        মানুষের চোখে অনেক কিছুই থাকে — হাসি, আনন্দ কিংবা ক্লান্তি। কিন্তু তোমার চোখের দিকে তাকালে আমি এক <span class="accent">শূন্যতা</span> খুঁজে পাই। ঠিক যেন এক শান্ত নদীর গভীরতা, যা বাইরে থেকে বোঝা দায়, কিন্তু ডুব দিলে তল খুঁজে পাওয়া অসম্ভব। রূপ তো ক্ষণস্থায়ী, কিন্তু মানুষের এই সম্মোহনী শক্তি — যা অনায়াসেই অন্যের মনোযোগ কেড়ে নেয় — সেটা বড় বিরল। অনেকটা সময়ের ফোঁটার মতো, যা বয়ে যায় ঠিকই, কিন্তু নিজের ছাপ রেখে যায় গভীরে।
+      <p class="prose">
+        মানুষের চোখে অনেক কিছুই থাকে — হাসি, আনন্দ কিংবা ক্লান্তি। কিন্তু তোমার চোখের দিকে তাকালে আমি এক শূন্যতা খুঁজে পাই। ঠিক যেন এক শান্ত নদীর গভীরতা, যা বাইরে থেকে বোঝা দায়, কিন্তু ডুব দিলে তল খুঁজে পাওয়া অসম্ভব। রূপ তো ক্ষণস্থায়ী, কিন্তু মানুষের এই সম্মোহনী শক্তি — যা অনায়াসেই অন্যের মনোযোগ কেড়ে নেয় — সেটা বড় বিরল। অনেকটা সময়ের ফোঁটার মতো, যা বয়ে যায় ঠিকই, কিন্তু নিজের ছাপ রেখে যায় গভীরে।
       </p>
 
-      <div class="read-divider">
-        <span class="line"></span><span class="mark">✦</span><span class="line"></span>
-      </div>
-
-      <div class="read-verse">
-        <p class="soft">হয়তো কোনো এক বিকেল,</p>
-        <p class="soft">আলো যখন একটু ক্ষীণ হবে,</p>
-        <p class="strong">তুমি বুঝবে —</p>
+      <div class="verse">
+        <p>হয়তো কোনো এক বিকেল,</p>
+        <p>আলো যখন একটু ক্ষীণ হবে,</p>
+        <p>তুমি বুঝবে —</p>
         <p>এই চঞ্চল চোখের মায়ায়</p>
         <p>আমি একাই পথ হারিয়েছি।</p>
       </div>
 
-      <div class="read-divider">
-        <span class="line"></span><span class="mark">✧</span><span class="line"></span>
-      </div>
-
-      <div class="read-verse">
+      <div class="verse">
         <p>সবাই রূপ খোঁজে আয়নায়,</p>
         <p>আর আমি খুঁজে তোমার ওই চাহনির গহীনে —</p>
-        <p class="soft">যেখানে কোনো শব্দ নেই,</p>
-        <p class="soft">শুধু এক আকাশ নীরবতা,</p>
+        <p>যেখানে কোনো শব্দ নেই,</p>
+        <p>শুধু এক আকাশ নীরবতা,</p>
         <p>আর তোমার প্রতি আমার না বলা</p>
-        <p class="gold">এক সমুদ্র গল্প।</p>
+        <p>এক সমুদ্র গল্প।</p>
       </div>
 
-      <div class="read-divider">
-        <span class="line"></span><span class="mark">✦</span><span class="line"></span>
-      </div>
+      <p class="question">
+        কেউ কি জানে? তুমি যখন হাসো, তখন পৃথিবীর সমস্ত কোলাহল কেন এক মুহূর্তের জন্য থেমে যায়?
+      </p>
 
-      <div class="read-question">
-        কেউ কি জানে? <br>
-        তুমি যখন হাসো,<br>
-        তখন পৃথিবীর সমস্ত কোলাহল<br>
-        কেন এক মুহূর্তের জন্য থেমে যায়?
-      </div>
-
-      <div class="read-divider">
-        <span class="line"></span><span class="mark">✦ ❦ ✦</span><span class="line"></span>
-      </div>
-
-      <div class="read-footer">— সমাপ্ত —</div>
+      <div class="end">— সমাপ্ত —</div>
 
     </div>
   </div>
@@ -930,7 +844,6 @@ const LANTERNS = [
 
 const SPECIAL_LINE = 'আর তোমার জন্য — <span class="soft">একটা নীরব শুভেচ্ছা।</span>';
 
-/* Wishes shown when user taps the sky */
 const WISH_MESSAGES = [
   'তোমার সব ইচ্ছা পূরণ হোক',
   'সুখে থাকো সবসময়',
@@ -954,7 +867,7 @@ const MAX_LANTERNS_ALIVE = isMobile ? 4 : 8;
 const FIREFLY_COUNT = isMobile ? 6 : 12;
 
 /* ============================================================
-   AUDIO — bell chime (fixed for GitHub Pages / iOS / Android)
+   AUDIO
    ============================================================ */
 let audioCtx = null;
 let audioUnlocked = false;
@@ -971,7 +884,6 @@ function createAudioCtx(){
   return audioCtx;
 }
 
-/* iOS-friendly unlock — silent buffer inside a user gesture */
 function unlockAudio(){
   const ctxA = createAudioCtx();
   if (!ctxA) return;
@@ -988,7 +900,6 @@ function unlockAudio(){
   audioUnlocked = true;
 }
 
-/* Attach unlock to EVERY interaction, not once */
 ['click','touchstart','touchend','pointerdown','keydown'].forEach(ev => {
   window.addEventListener(ev, unlockAudio, { passive: true });
 });
@@ -1001,7 +912,6 @@ function playBell(freq){
   const ctxA = createAudioCtx();
   if (!ctxA) return;
 
-  // if suspended, resume first, then play
   if (ctxA.state === 'suspended'){
     ctxA.resume().then(() => playBell(freq)).catch(()=>{});
     return;
@@ -1036,7 +946,54 @@ function playBell(freq){
 }
 
 /* ============================================================
-   CANVAS — stars + shooters + sparks + fireflies + wish stars
+   BUILD DOM
+   ============================================================ */
+const poemSky = document.getElementById('poemSky');
+const groundEl = document.getElementById('ground');
+const dotsEl   = document.getElementById('dots');
+const hintEl   = document.getElementById('hint');
+const final    = document.getElementById('final');
+const flash    = document.getElementById('flash');
+const wishCounter = document.getElementById('wishCounter');
+const wishNum = document.getElementById('wishNum');
+
+const groundEls = [];
+const dotEls    = [];
+const poemLines = [];
+
+LANTERNS.forEach((cfg, i) => {
+  const line = document.createElement('div');
+  line.className = 'poem-line';
+  line.innerHTML = cfg.line;
+  poemSky.appendChild(line);
+  poemLines.push(line);
+
+  const slot = document.createElement('button');
+  slot.type = 'button';
+  slot.className = 'lantern-slot';
+  slot.setAttribute('aria-label', 'Release lantern ' + (i + 1));
+  slot.innerHTML = `
+    <div class="lantern-body"></div>
+    <div class="lantern-base"></div>
+    <div class="lantern-hook"></div>
+  `;
+  slot.addEventListener('click', () => releaseLantern(i), { passive: true });
+  groundEl.appendChild(slot);
+  groundEls.push(slot);
+
+  const d = document.createElement('div');
+  d.className = 'dot';
+  dotsEl.appendChild(d);
+  dotEls.push(d);
+});
+
+const specialLine = document.createElement('div');
+specialLine.className = 'poem-line';
+specialLine.innerHTML = SPECIAL_LINE;
+poemSky.appendChild(specialLine);
+
+/* ============================================================
+   CANVAS
    ============================================================ */
 const cvs = document.getElementById('stars');
 const ctx = cvs.getContext('2d', { alpha: true, desynchronized: true });
@@ -1077,7 +1034,6 @@ function resize(){
     };
   }
 
-  // fireflies — near hills, lower part of screen
   fireflies = new Array(FIREFLY_COUNT);
   for (let i = 0; i < FIREFLY_COUNT; i++){
     fireflies[i] = {
@@ -1124,7 +1080,6 @@ function render(now){
 
   ctx.clearRect(0, 0, W, H);
 
-  /* ---- stars ---- */
   for (let i = 0; i < stars.length; i++){
     const s = stars[i];
     s.a += s.tw * s.dir;
@@ -1138,7 +1093,6 @@ function render(now){
     ctx.fill();
   }
 
-  /* ---- wish stars (user-tapped) ---- */
   for (let i = wishStars.length - 1; i >= 0; i--){
     const ws = wishStars[i];
     ws.age += dt / 1000;
@@ -1147,7 +1101,6 @@ function render(now){
     const pulse = 0.7 + Math.sin(ws.age * 2.5) * 0.3;
     const r = ws.r * (1 + ws.glow * 0.6);
 
-    // outer glow
     const grad = ctx.createRadialGradient(ws.x, ws.y, 0, ws.x, ws.y, r * 6);
     grad.addColorStop(0, `rgba(255,225,150,${0.5 * ws.glow * pulse})`);
     grad.addColorStop(0.4, `rgba(255,200,90,${0.18 * ws.glow * pulse})`);
@@ -1157,13 +1110,11 @@ function render(now){
     ctx.arc(ws.x, ws.y, r * 6, 0, 6.283);
     ctx.fill();
 
-    // core star
     ctx.fillStyle = `rgba(255,248,220,${0.85 * ws.glow})`;
     ctx.beginPath();
     ctx.arc(ws.x, ws.y, r * 0.5, 0, 6.283);
     ctx.fill();
 
-    // fade out after a while
     if (ws.age > 4) {
       ws.glow *= 0.97;
       if (ws.glow < 0.02){
@@ -1172,7 +1123,6 @@ function render(now){
     }
   }
 
-  /* ---- fireflies ---- */
   for (let i = 0; i < fireflies.length; i++){
     const ff = fireflies[i];
     ff.phase += ff.speed * f;
@@ -1182,11 +1132,9 @@ function render(now){
     if (ff.x < -20) ff.x = W + 20;
     if (ff.x > W + 20) ff.x = -20;
 
-    // pulsing alpha
     const a = 0.5 + Math.sin(ff.phase * 1.7) * 0.5;
     ff.alpha = a * 0.85;
 
-    // outer glow
     const grad = ctx.createRadialGradient(ff.x, ff.y, 0, ff.x, ff.y, ff.r * 5);
     grad.addColorStop(0, `rgba(255,235,140,${ff.alpha * 0.6})`);
     grad.addColorStop(0.4, `rgba(180,230,120,${ff.alpha * 0.25})`);
@@ -1196,14 +1144,12 @@ function render(now){
     ctx.arc(ff.x, ff.y, ff.r * 5, 0, 6.283);
     ctx.fill();
 
-    // core
     ctx.fillStyle = `rgba(255,248,180,${ff.alpha})`;
     ctx.beginPath();
     ctx.arc(ff.x, ff.y, ff.r * 0.5, 0, 6.283);
     ctx.fill();
   }
 
-  /* ---- shooting stars ---- */
   shooterTimer += dt;
   if (shooterTimer > (isMobile ? 5000 : 3200)){
     shooterTimer = 0;
@@ -1230,7 +1176,6 @@ function render(now){
     ctx.stroke();
   }
 
-  /* ---- sparks ---- */
   for (let i = sparks.length - 1; i >= 0; i--){
     const p = sparks[i];
     p.vy += 0.10 * f;
@@ -1297,19 +1242,16 @@ let lastWishTime = 0;
 
 cvs.addEventListener('click', handleWish, { passive: true });
 cvs.addEventListener('touchstart', (e) => {
-  // if tapping directly on canvas, handle as wish
   const t = e.touches[0];
   if (!t) return;
   handleWish({ clientX: t.clientX, clientY: t.clientY, target: cvs });
 }, { passive: true });
 
 function handleWish(e){
-  // throttle
   const now = performance.now();
   if (now - lastWishTime < 320) return;
   lastWishTime = now;
 
-  // only if clicked directly on canvas (not a lantern)
   const el = document.elementFromPoint(e.clientX, e.clientY);
   if (!el || (el !== cvs && !el.closest('.scene'))) return;
   if (el.closest('.lantern-slot') || el.closest('.flying-lantern') || el.closest('.ground')) return;
@@ -1317,7 +1259,6 @@ function handleWish(e){
   const x = e.clientX;
   const y = e.clientY;
 
-  // create a glowing wish star on canvas
   wishStars.push({
     x, y,
     r: 1.8 + Math.random() * 0.8,
@@ -1327,16 +1268,10 @@ function handleWish(e){
   });
   if (wishStars.length > 30) wishStars.shift();
 
-  // burst sparks at that spot
   burstSparks(x, y, 42);
-
-  // play a soft high chime
   playBell(1180 + Math.random() * 200);
-
-  // show a wish bubble
   showWishBubble(x, y, WISH_MESSAGES[Math.floor(Math.random() * WISH_MESSAGES.length)]);
 
-  // update counter
   wishCount++;
   wishNum.textContent = wishCount;
   wishCounter.classList.add('show');
@@ -1414,7 +1349,6 @@ function releaseLantern(i){
   setTimeout(() => { poemLines[i].classList.add('on'); }, 700);
   burstSparks(cx, cy, LANTERNS[i].hue);
 
-  // bell — different note per lantern (rising scale)
   const notes = [660, 740, 830, 880, 990, 1100];
   playBell(notes[i % notes.length]);
 
@@ -1430,7 +1364,6 @@ function releaseLantern(i){
   }
 }
 
-/* 7th special lantern — auto-launched from bottom center */
 function spawnSpecialLantern(){
   if (specialLanternSpawned || finished) return;
   specialLanternSpawned = true;
@@ -1443,19 +1376,14 @@ function spawnSpecialLantern(){
   l.vx = 0;
   flying.push(l);
 
-  // big burst
   burstSparks(cx, cy, 45);
   setTimeout(() => burstSparks(cx, cy - 20, 40), 150);
 
-  // grand chord
   playBell(880);
   setTimeout(() => playBell(1320), 200);
   setTimeout(() => playBell(1760), 400);
 
-  // show special poem line after it rises
   setTimeout(() => { specialLine.classList.add('on'); }, 900);
-
-  // then finale
   setTimeout(triggerFinale, 2600);
 }
 
@@ -1486,7 +1414,6 @@ function lanternTick(now){
       `translate3d(${(l.x).toFixed(1)}px, ${(l.y).toFixed(1)}px, 0) translate(-50%,-50%) scale(${l.scale.toFixed(2)}) rotate(${rot.toFixed(1)}deg)`;
     l.el.style.opacity = l.alpha.toFixed(2);
 
-    // trail spark — special lantern trails more
     const trailChance = l.isSpecial ? 0.5 : (isMobile ? 0.18 : 0.32);
     if (l.age > 0.35 && Math.random() < trailChance){
       trailSpark(l.x + (Math.random() - 0.5) * 18, l.y + 18, l.hue || 45);
